@@ -1,0 +1,16 @@
+<div id="message">Job Posted successfully!</div>
+
+<script>setTimeout(function() {
+  document.getElementById("message").style.display = "none";
+}, 3000);
+</script>
+
+<style> 
+.message{
+  animation: fadeOut 3s forwards;
+}
+
+@keyframes fadeOut {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}</style>
