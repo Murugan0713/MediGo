@@ -1,0 +1,10 @@
+here is the deleted code for phone number validation in register.html 
+
+const validatePhone = (phone) => {
+        if (!phone) return "Phone required";
+        if (
+          !/^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/.test(phone)
+        )
+          return "Invalid number";
+        return "";
+      };

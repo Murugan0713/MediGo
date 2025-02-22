@@ -1,0 +1,610 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Diagnosis Symptom Checker</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+<style>
+/* Global Styles */
+* {
+    box-sizing: border-box;
+}
+/* Below for navbar*/ 
+.Logo {
+        height: 3rem;
+        width: 3rem;
+        margin-left: 2rem;
+        margin-right: 2rem;
+      }
+      #nav {
+        background-color: #4caf50 !important;
+      }
+      a {
+        color: black !important;
+        font-weight: 600 !important;
+      }
+      a:hover {
+        color: white !important;
+      }
+      .dropdown-item:hover {
+        color: #4caf50 !important;
+      }
+      .btn {
+        font-weight: 600;
+        background-color: white;
+      }
+/* nav css ends */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f7fa;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+header {
+    background-color: #2c3e50;
+    color: white;
+    margin: 0;
+    text-align: center;
+    padding: 20px;
+    top: 0;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2em;
+    font-weight: 600;
+}
+
+#language-selection {
+    text-align: center;
+    margin: 10px;
+}
+
+#language-selection select {
+    padding: 10px;
+    font-size: 1em;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    width: 220px;
+    transition: border 0.3s ease;
+}
+
+#language-selection select:focus {
+    border-color: #3498db;
+}
+
+section {
+    margin: 20px;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    transition: box-shadow 0.3s ease;
+}
+
+section:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+h2 {
+    text-align: center;
+    font-size: 1.8em;
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+/* Input and Button Styling */
+#searchBar, select {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    font-size: 1em;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    transition: border 0.3s ease;
+}
+
+#searchBar:focus, select:focus {
+    border-color: #3498db;
+}
+
+.switch {
+    background-color: #3498db;
+    color: white;
+    padding: 12px 24px;
+    font-size: 1em;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    margin-right: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.switch:hover {
+    background-color: #2980b9;
+}
+
+
+
+#diagnosis-list, #symptom-info , #remedies-list {
+    background-color: #eaf1f6;
+}
+
+/* Suggestions Box */
+.suggestion-box {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    position: absolute;
+    width: calc(100% - 20px);
+    background-color: white;
+    z-index: 10;
+    display: none;
+}
+
+.suggestion-box div {
+    padding: 12px;
+    cursor: pointer;
+}
+
+.suggestion-box div:hover {
+    background-color: #f1f1f1;
+}
+
+/* Dropdown Fix for Laptop View */
+select {
+    appearance: none; /* Removes default arrow */
+    background: #fff url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNCIgaGVpZ2h0PSI4IiB2aWV3Qm94PSIwIDAgMTQgOCI+PHBvbHlsaW5lIHBvaW50cz0iMSAxbDYgNiA2LTYiIHN0eWxlPSJmaWxsOm5vbmUgc3Ryb2tlOiMwMDAgc3Ryb2tlLXdpZHRoOjIiLz48L3N2Zz4=') no-repeat right 10px center;
+    padding-right: 30px; /* Space for dropdown arrow */
+}
+;
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 1.8em;
+    }
+
+    #language-selection select {
+        width: 100%;
+        padding: 8px;
+    }
+
+    section {
+        padding: 15px;
+        margin: 10px;
+    }
+
+    #searchBar, select {
+        padding: 8px;
+        font-size: 0.95em;
+    }
+
+    .switch {
+        width: 100%;
+        padding: 12px 0;
+        margin-top: 10px;
+    }
+
+    .suggestion-box {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    header h1 {
+        font-size: 1.6em;
+    }
+
+    section {
+        margin: 5px;
+        padding: 10px;
+    }
+
+    #searchBar, select {
+        padding: 8px;
+        font-size: 0.9em;
+    }
+
+    .switch {
+        width: 100%;
+        padding: 10px 0;
+    }
+
+    .suggestion-box {
+        max-height: 150px;
+    }
+}
+
+</style>
+</head>
+<body>
+    <nav id="nav" class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          <img
+            class="Logo"
+            src="./Resources/pixelcut-export.png"
+            alt="Medico-Logo"
+            href="MediGo.html"
+          />
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ">
+              <li class="nav-item ">
+                <a class="nav-link active" aria-current="page" href="MediGo.html">Home</a>
+              </li>
+              <li class="nav-item dropdown ">
+                <a
+                  class="nav-link dropdown-toggle"
+                  href="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Services
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="SymptomChecker.html">Symptom Checker</a></li>
+                  <li><a class="dropdown-item" href="#">Health Articles</a></li>
+                  <li><hr class="dropdown-divider" /></li>
+                  <li>
+                    <a class="dropdown-item" href="#">Doctor Appointments</a>
+                  </li>
+                </ul>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="contact us.html">Contact Us</a>
+              </li>
+              <li class="nav-item ">
+                <a class="nav-link" href="aboutus.html">About Us</a>
+              </li>
+            </ul>
+            <!--for profile-->
+            <div class="btn-group">
+              <button type="button" class="btn btn-outline-success dropdown-toggle mb-lg-0 mb-3 me-3 " data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
+                Your Profile
+              </button>
+              <ul class="dropdown-menu dropdown-menu-lg-end">
+                <li><button class="dropdown-item" type="button">Your Appointments</button></li>
+                <li><button class="dropdown-item" type="button">Another action</button></li>
+                <li><hr class="dropdown-divider" /></li>
+                <li><button class="dropdown-item" type="button">Log Out</button></li>
+              </ul>
+            </div>
+            <!--ends here-->
+            <form class="d-flex mb-0" role="search">
+              <input
+                class="form-control me-2"
+                type="search"
+                placeholder="Search"
+                aria-label="Search"
+              />
+              <button class="btn btn-outline-success "  type="submit">
+                Search
+              </button>
+            </form>
+          </div>
+        </div>
+      </nav>
+    <header>
+        <h1><i class="fas fa-stethoscope"></i> <span id="title">Medical Diagnosis Symptom Checker</span></h1>
+    </header>
+    
+
+    <section id="symptom-selection">
+        <h2><span id="select-symptoms-text">Select Your Symptoms</span></h2>
+
+        <!-- Search Bar -->
+        <input type="text" id="searchBar" placeholder="Search symptoms..." oninput="filterSymptoms()">
+        <div id="suggestions" class="suggestion-box"></div>
+
+        <label for="symptoms" id="choose-symptoms-label">Choose Symptoms:</label><br>
+        <select id="symptoms" multiple>
+            <option value="fever">Fever</option>
+            <option  value="headache">Headache</option>
+            <option  value="cough">Cough</option>
+            <option  value="fatigue">Fatigue</option>
+            <option  value="sore-throat">Sore Throat</option>
+            <option  value="shortness-of-breath">Shortness of Breath</option>
+            <option  value="chest-pain">Chest Pain</option>
+            <option  value="nausea">Nausea</option>
+            <option  value="dizziness">Dizziness</option>
+            <option  value="diarrhea">Diarrhea</option>
+            <option  value="vomiting">Vomiting</option>
+            <option  value="sweating">Sweating</option>
+            <option  value="loss-of-appetite">Loss of Appetite</option>
+            <option  value="muscle-pain">Muscle Pain</option>
+            <option  value="joint-pain">Joint Pain</option>
+            <option  value="runny-nose">Runny Nose</option>
+            <option  value="back-pain">Back Pain</option>
+            <option  value="swollen-lymph-nodes">Swollen Lymph Nodes</option>
+            <option  value="rash">Rash</option>
+        </select><br><br>
+
+        <button class="switch" onclick="checkDiagnosis()"><i class="fas fa-search "></i> <span  id="check-diagnosis-text">Check Diagnosis</span></button>
+        <button class="switch" onclick="resetSymptoms()"><i class="fas fa-sync-alt"></i> <span id="reset-text">Reset</span></button>
+    </section>
+
+    <section id="diagnosis-results">
+        <h2><span id="possible-diagnosis-text">Possible Diagnoses</span></h2>
+        <ul id="diagnosis-list">
+            <!-- Diagnoses will appear here -->
+        </ul>
+    </section>
+
+    <section id="symptom-description">
+        <h2><span id="symptom-description-text">Symptom Descriptions</span></h2>
+        <ul id="symptom-info">
+            <!-- Symptom descriptions will appear here -->
+        </ul>
+    </section>
+
+    <!-- Natural Remedies Section -->
+    <section id="natural-remedies">
+        <h2><span id="remedies-text">Natural Remedies</span></h2>
+        <ul id="remedies-list">
+            <!-- Remedies will be listed here based on symptoms -->
+        </ul>
+    </section>
+
+<script>
+const diagnosisData = {
+    'fever': {
+        diagnosis: ['Fever:Flu, COVID-19, Malaria, Typhoid'],
+        description: 'Fever is a temporary increase in body temperature, often caused by an infection.',
+        remedies: ['Fever:Stay hydrated, Rest and take fever reducers, Cool compress on the forehead']
+    },
+    'headache': {
+        diagnosis: ['Headache:Migraine, Tension headache, Sinus infection, Cluster headaches'],
+        description: 'Headaches can be caused by various factors like stress, dehydration, or infections.',
+        remedies: ['Headache:Apply a cold compress, Take pain relievers, Practice relaxation techniques']
+    },
+    'cough': {
+        diagnosis: ['Cough:Cold, Bronchitis, Pneumonia, Whooping cough'],
+        description: 'Coughing can be caused by respiratory infections, allergens, or other irritants.',
+        remedies: ['Cough:Drink warm tea with honey, Use throat lozenges, Stay hydrated']
+    },
+    'fatigue': {
+        diagnosis: ['Fatigue:Chronic fatigue syndrome, Sleep apnea, Anemia, Depression'],
+        description: 'Fatigue is an overwhelming feeling of tiredness or lack of energy.',
+        remedies: ['Fatigue:Get adequate sleep, Exercise regularly, Eat a balanced diet']
+    },
+    'sore-throat': {
+        diagnosis: ['Sore-Thorat:Tonsillitis, Pharyngitis, Strep throat'],
+        description: 'A sore throat is often caused by an infection or irritants like smoke.',
+        remedies: ['Sore-Thorat:Gargle warm salt water, Stay hydrated, Use throat lozenges']
+    },
+    'nausea': {
+        diagnosis: ['nausea:Food poisoning, Gastritis, Motion sickness, Pregnancy'],
+        description: 'Nausea is the sensation of wanting to vomit and is often related to digestive issues.',
+        remedies: ['Nausea:Drink ginger tea, Eat small meals, Rest and avoid strong odors']
+    },
+    'shortness-of-breath': {
+        diagnosis: ['Shortness-of-breath:Asthma, Pneumonia, COPD, Heart disease'],
+        description: 'Shortness of breath can be caused by respiratory or heart-related issues.',
+        remedies: ['Shortness-of-breath:Practice breathing exercises, Avoid allergens, Use prescribed inhalers']
+    },
+    'chest-pain': {
+        diagnosis: ['Chest-pain:Heart attack, Acid reflux, Muscle strain, Angina'],
+        description: 'Chest pain can be a sign of a serious condition and should not be ignored.',
+        remedies: ['Chest-pain:Rest and avoid physical exertion, Take prescribed medications, Seek emergency medical attention']
+    },
+    'dizziness': {
+        diagnosis: ['Dizziness:Vertigo, Dehydration, Low blood pressure, Inner ear infections'],
+        description: 'Dizziness is the sensation of lightheadedness or unsteadiness.',
+        remedies: ['Dizziness:Sit or lie down, Stay hydrated, Avoid sudden movements']
+    },
+    'dizziness': {
+        diagnosis: ['Dizziness:Food poisoning, Irritable bowel syndrome, Gastroenteritis, Celiac disease'],
+        description: 'Diarrhea is characterized by frequent loose or watery stools.',
+        remedies: ['Dizziness:Drink oral rehydration solutions, Eat a bland diet, Avoid dairy and caffeine']
+    },
+    'vomiting': {
+        diagnosis: ['Vomiting:Food poisoning, Migraine, Gastritis, Pregnancy'],
+        description: 'Vomiting can be caused by a variety of issues, including infections, toxins, or digestive problems.',
+        remedies: ['Vomiting:Drink ginger tea, Avoid strong smells, Eat light foods']
+    },
+    'sweating': {
+        diagnosis: ['Sweating:Hyperhidrosis, Infection, Anxiety, Heart disease'],
+        description: 'Excessive sweating can be caused by various conditions, including stress or underlying health issues.',
+        remedies: ['Sweating:Wear loose clothing, Use antiperspirants, Stay hydrated']
+    },
+    'loss-of-appetite': {
+        diagnosis: ['Loss-of-appetite:Anorexia, Depression, Gastritis, Thyroid disorders'],
+        description: 'Loss of appetite is often a symptom of a medical condition, stress, or emotional issues.',
+        remedies: ['Loss-of-appetite:Eat small, frequent meals, Avoid strong-smelling foods, Seek medical advice if persistent']
+    },
+    'muscle-pain': {
+        diagnosis: ['Muscle-pain,:Fibromyalgia, Muscle strain, Myositis, Chronic fatigue syndrome'],
+        description: 'Muscle pain can be caused by injury, overuse, or underlying medical conditions.',
+        remedies: ['Muscle-pain:Apply heat or cold packs, Take anti-inflammatory drugs, Stretch and rest']
+    },
+    'joint-pain': {
+        diagnosis: ['Joint-pain:Arthritis, Gout, Lupus, Bursitis'],
+        description: 'Joint pain can result from injury, inflammation, or chronic conditions like arthritis.',
+        remedies: ['Joint-pain:Apply warm or cold compress, Take pain relievers, Practice gentle exercises']
+    },
+    'runny-nose': {
+        diagnosis: ['Runny-nose:Common cold, Allergies, Sinus infection'],
+        description: 'A runny nose is often caused by infections or allergens.',
+        remedies: ['Runny-nose:Use saline nasal spray, Drink warm fluids, Avoid irritants']
+    },
+    'back-pain': {
+        diagnosis: ['Back-pain: disc, Muscle strain, Sciatica, Osteoarthritis'],
+        description: 'Back pain can be caused by injuries, poor posture, or medical conditions.',
+        remedies: ['Back-pain:Rest and avoid heavy lifting, Use proper posture, Take pain relievers']
+    },
+    'swollen-lymph-nodes': {
+        diagnosis: ['Swollen-lymph-nodes:Infection, Cancer, Autoimmune disorders'],
+        description: 'Swollen lymph nodes can be a sign of infection or other medical conditions.',
+        remedies: ['Swollen-lymph-nodes:Stay hydrated, Rest, Seek medical advice if persistent']
+    },
+    'rash': {
+        diagnosis: ['Rash:Eczema, Psoriasis, Allergic reaction', 'Infection'],
+        description: 'A rash is an area of irritated or swollen skin, often caused by infections or allergies.',
+        remedies: ['Rash:Use anti-itch creams, Avoid irritants, Stay cool and avoid scratching']
+    }
+};
+
+// Assuming you have some language data for translations
+const translations = {
+    en: {
+        title: 'Diagnosis App',
+        selectSymptomsText: 'Please select your symptoms.',
+        chooseSymptomsLabel: 'Choose Symptoms',
+        checkDiagnosisText: 'Check Diagnosis',
+        resetText: 'Reset',
+        possibleDiagnosisText: 'Possible Diagnosis:',
+        symptomDescriptionText: 'Symptom Description:',
+        remediesText: 'Remedies:'
+    },
+    // Add other languages as needed
+};
+
+function changeLanguage() {
+    const lang = document.getElementById('language').value;
+    const elements = {
+        title: document.getElementById('title'),
+        selectSymptomsText: document.getElementById('select-symptoms-text'),
+        chooseSymptomsLabel: document.getElementById('choose-symptoms-label'),
+        checkDiagnosisText: document.getElementById('check-diagnosis-text'),
+        resetText: document.getElementById('reset-text'),
+        possibleDiagnosisText: document.getElementById('possible-diagnosis-text'),
+        symptomDescriptionText: document.getElementById('symptom-description-text'),
+        remediesText: document.getElementById('remedies-text')
+    };
+
+    for (let key in elements) {
+        elements[key].textContent = translations[lang][key];
+    }
+}
+
+function filterSymptoms() {
+    const query = document.getElementById('searchBar').value.toLowerCase();
+    const symptoms = document.getElementById('symptoms');
+    const options = symptoms.options;
+
+    let suggestions = [];
+    for (let i = 0; i < options.length; i++) {
+        const symptom = options[i].text.toLowerCase();
+        if (symptom.includes(query)) {
+            suggestions.push(options[i].text);
+        }
+    }
+
+    const suggestionsBox = document.getElementById('suggestions');
+    suggestionsBox.innerHTML = '';
+    if (suggestions.length > 0) {
+        suggestions.forEach(function (suggestion) {
+            const div = document.createElement('div');
+            div.textContent = suggestion;
+            div.onclick = function () {
+                // Set the input value to the suggestion
+                document.getElementById('searchBar').value = suggestion;
+                suggestionsBox.style.display = 'none';
+
+                // Manually trigger the selection in the dropdown
+                const options = symptoms.options;
+                for (let i = 0; i < options.length; i++) {
+                    if (options[i].text === suggestion) {
+                        options[i].selected = true;
+                        break;
+                    }
+                }
+            };
+            suggestionsBox.appendChild(div);
+        });
+        suggestionsBox.style.display = 'block';
+    } else {
+        suggestionsBox.style.display = 'none';
+    }
+}
+
+function checkDiagnosis() {
+    const selectedSymptoms = Array.from(document.getElementById('symptoms').selectedOptions)
+        .map(option => option.value);
+
+    const diagnosisList = document.getElementById('diagnosis-list');
+    const symptomInfo = document.getElementById('symptom-info');
+    const remediesList = document.getElementById('remedies-list');
+
+    diagnosisList.innerHTML = '';
+    symptomInfo.innerHTML = '';
+    remediesList.innerHTML = '';
+    
+    selectedSymptoms.forEach(symptom => {
+        const symptomData = diagnosisData[symptom];
+
+        if (symptomData) {
+            symptomData.diagnosis.forEach(diagnosis => {
+                const listItem = document.createElement('li');
+                listItem.textContent = diagnosis;
+                diagnosisList.appendChild(listItem);
+            });
+
+            const descriptionItem = document.createElement('p');
+            descriptionItem.textContent = symptomData.description;
+            symptomInfo.appendChild(descriptionItem);
+
+            symptomData.remedies.forEach(remedy => {
+                const remedyItem = document.createElement('li');
+                remedyItem.textContent = remedy;
+                remediesList.appendChild(remedyItem);
+            });
+        }
+    });
+}
+
+// Function to reset the form
+function resetSymptoms() {
+    // Reset symptoms dropdown selection
+    const symptoms = document.getElementById('symptoms');
+    symptoms.selectedIndex = -1;  // This deselects all options in the dropdown
+
+    // Clear the search bar
+    document.getElementById('searchBar').value = ''; 
+
+    // Hide suggestions box
+    const suggestionsBox = document.getElementById('suggestions');
+    suggestionsBox.style.display = 'none';
+
+    // Clear diagnosis list
+    document.getElementById('diagnosis-list').innerHTML = ''; 
+
+    // Clear symptom description
+    document.getElementById('symptom-info').innerHTML = ''; 
+
+    // Clear remedies list
+    document.getElementById('remedies-list').innerHTML = ''; 
+}
+</script>
+</body>
+</html>
