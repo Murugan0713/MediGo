@@ -4,63 +4,254 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DoctorsAppointments</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
     <style>
-
+        .Logo {
+    height: 3rem;
+    width: 3rem;
+    margin-left: 2rem;
+    margin-right: 2rem;
+  }
+  #nav {
+    background-color: #4caf50 !important;
+  }
+  a {
+    color: black !important;
+    font-weight: 600 !important;
+    text-decoration: none;
+  }
+  a:hover {
+    color: white !important;
+  }
+  .dropdown-item:hover {
+    color: #4caf50 !important;
+  }
+  .btn {
+    font-weight: 600;
+    background-color: white;
+  }
+  /*Below for Footer*/
+  .footer-container,.py-3{
+    background-color: #4caf50;
+  }
+    .click{
+      width: 100%;
+      height: 2px;
+      background-color: white;
+      margin: 10px 0;
+    }
+    /*appointment*/
+        .container{
+          max-width: 1000px;
+          margin: 30px auto;
+          background-color: white;
+          padding: 2%;
+          border-radius: 8px;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+          
+        }
+         h2{
+          color: #333;
+          margin-bottom: 1.5rem;
+          text-align: center;
+          padding: 20px;
+          font-weight: bold;
+         }
+         label{
+          display: block;
+          margin-bottom: 0.5rem;
+          font-weight: bold;
+          color: #444;
+         }
+         input[type="text"]:focus, input[type="date"]:focus, input[type="number"]:focus, select:focus{
+        border-color: #424242;
+        outline: none;
+        padding: 0.6rem;
+        
+         }
+         .error {
+        color: red;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+      }
+         .submit{
+            text-align: center;
+            margin-top: 2px;
+         }
+         .submit-button{
+    font-size: 16px;
+    font-weight: 500;
+    padding: 12px 35px;
+    color: white;
+    border-radius: 40px;
+    display: inline-block;
+    white-space: nowrap;
+    border: none;
+    background: black;
+    transition: all 0.3s ease;
+    margin-top: 50px;
+        }
+     .submit button:hover{
+        background-color: green;
+     }
+         
+    optgroup{
+        font-style: normal;
+        font-weight: bold;
+        color: #333;
+        padding: 0.5rem 0;
+    }
+    optgroup option{
+        font-weight: bold;
+        padding: 0.5rem 0;
+    }
+    input, select, option{
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+    }
     </style>
 </head>
 <body>
-<form action="/auth/DoctorsAppointments" method="POST">
-<div class="container">
+
+    <nav id="nav" class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          <img
+            class="Logo"
+            src="./Resources/pixelcut-export.png"
+            alt="Medico-Logo"
+          />
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Home</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a
+                  class="nav-link dropdown-toggle"
+                  href="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Services
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="#">Symptom Checker</a></li>
+                  <li><a class="dropdown-item" href="#">Health Articles</a></li>
+                  <li><hr class="dropdown-divider" /></li>
+                  <li>
+                    <a class="dropdown-item" href="#">Doctor Appointments</a>
+                  </li>
+                </ul>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Contact Us</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">About Us</a>
+              </li>
+            </ul>
+            <form class="d-flex" role="search">
+              <input
+                class="form-control me-2"
+                type="search"
+                placeholder="Search"
+                aria-label="Search"
+              />
+              <button class="btn btn-outline-success" type="submit">
+                Search
+              </button>
+            </form>
+          </div>
+        </div>
+      </nav>
+
+    
+    <form id="DoctorsAppointments" action="/auth/DoctorsAppointments" method="POST">
+    <div class="container">
        <h2>Doctors Appointment</h2><hr>
-    <div class="first name">
-        <label>First-Name</label>
-        <input type="text" placeholder="Enter First-Name" name="first_name">
+    <div class="first-name">
+        <label>First-Name:</label>
+        <input type="text" placeholder="Enter First-Name" id="first_name" name="first_name"  required>
+        <div class="error" id="first_name_error"></div>
     </div>
     <div class="last name">
-        <label>Last-Name</label>
-        <input type="text" placeholder="Enter Last-Name" name="last_name">
+        <label>Last-Name:</label>
+        <input type="text" id="last_name" placeholder="Enter Last-Name" name="last_name">
+        <span class="error" id="last_name_error"></span>
     </div>
     <div class="dob">
-        <label>Date-Of-Birth</label>
-        <input type="date" name="dob">
+        <label>Date-Of-Birth:</label>
+        <input type="date" name="dob" id="dob" onchange="validateDOB()" required>
+        <div class="error" id="dobError"></div>
     </div>
     <div class="age">
-        <label>Age</label>
-        <input type="number" name="age">
+        <label>Age:</label>
+        <input type="text" id="age" name="age" required>
+        <span class="error" id="age_error"></span>
     </div>
     <div class="gender">
-        <label>Gender</label>
-        <select name="gender">
+        <label>Gender:</label>
+        <select name="gender" required>
             <option value="">Please Select</option>
             <option value="Male">Male</option>
             <option value="Female">Female</option>
             <option value="Transgender">Transgender</option>
             <option value="Not Willing">Not Willing To Ask</option>
         </select>
+        <div class="error" id="SelectError"></div>
     </div>
     <div class="email">
-        <label for="">E-mail</label>
-        <input type="text" placeholder="example@gmail.com" name="email">
+        <label for="">E-mail:</label>
+        <input type="text" id="email" placeholder="example@gmail.com" name="email" required>
+        <div class="error" id="emailError"></div>
     </div>
     <div class="phone-no">
-        <label for="">Mobile-No</label>
-        <input type="text" placeholder="00000 00000" name="phone_number">
+        <label for="">Mobile-No:</label>
+        <input type="text" placeholder="00000 00000" name="phone_number" required>
+        <span class="error" id="phone_error"></span>
     </div>
     <div class="address line-1">
-        <label for="">Address Line 1</label>
-        <input type="text" placeholder="Door-no & Street Name" name="address1">
+        <label for="">Address Line 1:</label>
+        <input type="text" placeholder="Door-no & Street Name" name="address1" required>
     </div>
     <div class="address line-2">
-        <label for="">Address Line 2</label>
-        <input type="text" placeholder=" District-Name & State-Name,pin-code" name="address2">
+        <label for="">Address Line 2:</label>
+        <input type="text" placeholder=" District-Name & State-Name,pin-code" name="address2" required>
     </div>
     <div class="appoinment-date">
-        <label>Appoinment-Date</label>
-        <input type="date" name="appointment_date">
+        <label>Appoinment-Date:</label>
+        <input type="date" id="appointmentDate" name="appointment_date" required>
+        <span class="error" id="appointmentError"></span>
     </div>
     <div class="Appoinment-Time">
-        <label>Appoinment-Time</label>
-        <select name="appointment_time">
+        <label>Appoinment-Time:</label>
+        <select name="appointment_time" required>
             <option value="">Please Select</option>
             <option value="9 AM - 10 AM">9 AM - 10 AM</option>
             <option value="10 AM - 11 AM">10 AM - 11 AM</option>
@@ -71,12 +262,13 @@
             <option value="4 PM - 5 PM">4 PM - 5 PM</option>
             <option value="5 PM - 6 PM">5 PM - 6 PM</option>
         </select>
+        <div class="error" id="SelectError"></div>
     </div>
 
-
-    <label for="doctor-specialty">Choose a doctor specialty:</label>
-    <select id="doctor-specialty" name="doctor_specialty" >
-        <option value="">-- Select a Doctor --</option>
+    <div>
+      <label for="doctor-specialty">Choose a doctor specialty:</label>
+      <select id="doctor-specialty" name="doctor_specialty" required >
+        <option value="">Please Select</option>
         <optgroup label="General">
             <option value="General Physician">General Physician</option>
             <option value="Family Doctor">Family Doctor</option>
@@ -117,18 +309,358 @@
             <option value="Urologist">Urologist</option>
             <option value="Sexologist">Sexologist</option>
         </optgroup>
-    </select>
+      </select>
+      <div class="error" id="SelectError"></div>
+    </div>
+    
     
 
     <div class="submit">
-        <button>Submit</button>
+        <button class="submit-button" onclick="validateForm()">Submit</button>
     </div> 
-</div>
+
 </form>
 
 <script>
 
-</script>
+document.addEventListener("DOMContentLoaded", function () {
+  const form = document.getElementById("DoctorsAppointments");
+
+  const inputs = {
+    firstname: document.getElementById("first_name"),
+    dob: document.getElementById("dob"),
+    email: document.getElementById("email"),
+    age: document.getElementById("age"),
+    phone: document.querySelector("input[name='phone_number']"),
+    appointmentDate: document.getElementById("appointmentDate"),
+  };
+
+  // Validation functions
+  function validateFirstname(firstname) {
+    if (!firstname) return "FirstName is required";
+    if (firstname.length < 4) return "FirstName must be at least 4 characters";
+    if (!/^[a-zA-Z0-9_]+$/.test(firstname)) return "Invalid characters";
+    return "";
+  }
+
+  function validateDob(dob) {
+    if (!dob) return "This field is required";
+    const selectedDate = new Date(dob);
+    const today = new Date();
+    if (selectedDate >= today) return "Invalid date of birth";
+    return "";
+  }
+
+  function validateEmail(email) {
+    if (!email) return "Email is required";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return "Invalid email format";
+    return "";
+  }
+
+  function validatePhoneNumber(phone) {
+    if (!/^\d{10}$/.test(phone)) return "Invalid phone number (must be 10 digits)";
+    return "";
+  }
+
+  function validateAppointmentDate(appointmentDate) {
+    if (!appointmentDate) return "Please select an appointment date";
+    const selectedDate = new Date(appointmentDate);
+    const today = new Date();
+
+    if (selectedDate <= today) return "Invalid date chosen (select a future date)";
+    return "";
+  }
+
+  function calculateAge(dob) {
+    const birthDate = new Date(dob);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
+  }
+
+  // Form submission
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    let isValid = true;
+
+    const errors = {
+      firstname: validateFirstname(inputs.firstname.value.trim()),
+      dob: validateDob(inputs.dob.value),
+      email: validateEmail(inputs.email.value.trim()),
+      phone: validatePhoneNumber(inputs.phone.value.trim()),
+      appointmentDate: validateAppointmentDate(inputs.appointmentDate.value),
+    };
+
+    // Show errors in the UI
+    Object.keys(errors).forEach((field) => {
+      const errorElement = document.getElementById(`${field}Error`);
+      if (errorElement) {
+        errorElement.textContent = errors[field];
+      }
+      if (errors[field]) isValid = false;
+    });
+
+    if (isValid) {
+      form.submit(); // Submit form if everything is valid
+    }
+  });
+
+  // Real-time validation
+  inputs.firstname.addEventListener("input", () => {
+    document.getElementById("first_name_error").textContent = validateFirstname(inputs.firstname.value.trim());
+  });
+
+  inputs.email.addEventListener("input", () => {
+    document.getElementById("emailError").textContent = validateEmail(inputs.email.value.trim());
+  });
+
+  inputs.dob.addEventListener("input", () => {
+    const dobValue = inputs.dob.value;
+    const dobError = document.getElementById("dobError");
+    const ageField = inputs.age;
+
+    const errorMessage = validateDob(dobValue);
+    dobError.textContent = errorMessage;
+
+    if (!errorMessage) {
+      ageField.value = calculateAge(dobValue);
+    } else {
+      ageField.value = "";
+    }
+  });
+
+  inputs.phone.addEventListener("input", () => {
+    document.getElementById("phone_error").textContent = validatePhoneNumber(inputs.phone.value.trim());
+  });
+
+  inputs.appointmentDate.addEventListener("input", () => {
+    document.getElementById("appointmentError").textContent = validateAppointmentDate(inputs.appointmentDate.value);
+  });
+});
+
+
+
+  
+/*// Date of Birth (DOB) Validation
+function validateDOB() {
+        let dobInput = document.getElementById("dob");
+        let errorElement = document.getElementById("dobError");
+        let ageInput = document.getElementById("age");
+
+        let dob = dobInput.value;
+        if (dob === "") {
+            errorElement.textContent = "This field is required.";
+            return;
+        }
+
+        let today = new Date();
+        let birthDate = new Date(dob);
+        let age = today.getFullYear() - birthDate.getFullYear();
+        let monthDiff = today.getMonth() - birthDate.getMonth();
+
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+
+        if (birthDate > today) {
+            errorElement.textContent = "Date of birth must be in the past.";
+        } else if (age < 18) {
+            errorElement.textContent = "You must be at least 18 years old.";
+        } else {
+            errorElement.textContent = "";
+        }
+
+        ageInput.value = age; // Auto-fill age field
+    }
+
+  /*document.addEventListener("DOMContentLoaded", function () {
+    // Function to validate a field in real-time
+    function validateField(inputId, errorId, validationFn) {
+        let inputElement = document.getElementById(inputId);
+        let errorElement = document.getElementById(errorId);
+
+        inputElement.addEventListener("input", function () {
+            let errorMessage = validationFn(inputElement.value.trim());
+            errorElement.textContent = errorMessage;
+        });
+    }
+
+    // Name Validation (First Name & Last Name)
+    function validateName(value) {
+        if (value === "") return "This field is required.";
+        if (!/^[A-Za-z]+$/.test(value)) return "Only letters are allowed.";
+        return "";
+    }
+
+    // Email Validation
+    function validateEmail(value) {
+        if (value === "") return "This field is required.";
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return "Enter a valid email address.";
+        return "";
+    }
+
+    // Phone Number Validation (Only numbers and exactly 10 digits)
+    function validatePhone(value) {
+        if (value === "") return "This field is required.";
+        if (!/^\d+$/.test(value)) return "Phone number must be numbers.";
+        if (value.length !== 10) return "Phone number must be 10 numbers.";
+        return "";
+    }
+
+    // Date of Birth (DOB) Validation
+    function validateDOB() {
+        let dobInput = document.getElementById("dob");
+        let errorElement = document.getElementById("dobError");
+        let ageInput = document.getElementById("age");
+
+        let dob = dobInput.value;
+        if (dob === "") {
+            errorElement.textContent = "This field is required.";
+            return;
+        }
+
+        let today = new Date();
+        let birthDate = new Date(dob);
+        let age = today.getFullYear() - birthDate.getFullYear();
+        let monthDiff = today.getMonth() - birthDate.getMonth();
+
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+
+        if (birthDate > today) {
+            errorElement.textContent = "Date of birth must be in the past.";
+        } else if (age < 18) {
+            errorElement.textContent = "You must be at least 18 years old.";
+        } else {
+            errorElement.textContent = "";
+        }
+
+        ageInput.value = age; // Auto-fill age field
+    }
+
+    // Appointment Date Validation
+    function validateAppointmentDate() {
+        let appointmentDateInput = document.getElementById("appointmentDate");
+        let errorElement = document.getElementById("appointmentError");
+
+        let appointmentDate = appointmentDateInput.value;
+        if (appointmentDate === "") {
+            errorElement.textContent = "This field is required.";
+            return;
+        }
+
+        let selectedDate = new Date(appointmentDate);
+        let today = new Date();
+
+        if (selectedDate <= today) {
+            errorElement.textContent = "Appointment date must be in the future.";
+        } else {
+            errorElement.textContent = "";
+        }
+    }
+
+    // Dropdown Validation (Ensures user selects an option other than the first)
+    function validateDropdown(dropdownId, errorId) {
+        let dropdown = document.getElementById(dropdownId);
+        let errorElement = document.getElementById(errorId);
+
+        dropdown.addEventListener("change", function () {
+            if (dropdown.value === "" || dropdown.selectedIndex === 0) {
+                errorElement.textContent = "Please choose an option.";
+            } else {
+                errorElement.textContent = "";
+            }
+        });
+    }
+
+    // Attach validation functions to fields
+    validateField("first_name", "first_name_error", validateName);
+    validateField("last_name", "last_name_error", validateName);
+    validateField("email", "emailError", validateEmail);
+    validateField("phone_number", "phone_error", validatePhone);
+
+    document.getElementById("dob").addEventListener("change", validateDOB);
+    document.getElementById("appointmentDate").addEventListener("change", validateAppointmentDate);
+    validateDropdown("doctor-specialty", "doctorSpecialtyError");
+});
+
+
+  /*
+  document.getElementById("DoctorsAppointments").addEventListener("submit", function(event) {
+      event.preventDefault(); // Prevent form submission if validation fails
+  
+      let isValid = true;
+      let firstName = document.getElementById("first_name").value.trim();
+      let lastName = document.getElementById("last_name").value.trim();
+      let email = document.getElementById("email").value.trim();
+      let phone = document.getElementsByName("phone_number")[0].value.trim();
+      let dob = document.getElementById("dob").value;
+      let appointmentDate = document.getElementById("appointmentDate").value;
+      let doctorSpecialty = document.getElementById("doctor-specialty").value;
+  
+      // Clear previous errors
+      document.querySelectorAll(".error").forEach(e => e.textContent = "");
+  
+      // Name validation
+      if (!/^[A-Za-z]+$/.test(firstName)) {
+          document.getElementById("first_name_error").textContent = "First name should contain only letters.";
+          isValid = false;
+      }
+      if (!/^[A-Za-z]+$/.test(lastName)) {
+          document.getElementById("last_name_error").textContent = "Last name should contain only letters.";
+          isValid = false;
+      }
+  
+      // Email validation
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          document.getElementById("emailError").textContent = "Enter a valid email address.";
+          isValid = false;
+      }
+  
+      // Phone number validation (10 digits)
+      if (!/^\d{10}$/.test(phone)) {
+          document.getElementById("phone_error").textContent = "Enter a valid 10-digit phone number.";
+          isValid = false;
+      }
+  
+      // Date of Birth validation (Age must be at least 18)
+      let today = new Date();
+      let birthDate = new Date(dob);
+      let age = today.getFullYear() - birthDate.getFullYear();
+      let monthDiff = today.getMonth() - birthDate.getMonth();
+      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+          age--;
+      }
+      if (age < 18) {
+          document.getElementById("dobError").textContent = "You must be at least 18 years old.";
+          isValid = false;
+      }
+  
+      // Appointment date validation (must be in the future)
+      let selectedDate = new Date(appointmentDate);
+      if (selectedDate <= today) {
+          document.getElementById("appointmentError").textContent = "Appointment date must be in the future.";
+          isValid = false;
+      }
+  
+      // Doctor Specialty selection
+      if (doctorSpecialty === "") {
+          document.getElementById("doctor_specialty_error").textContent = "Please select a doctor specialty.";
+          isValid = false;
+      }
+  
+      if (isValid) {
+          alert("Appointment booked successfully!");
+          this.submit();
+      }
+  });*/
+  </script>
+  
 
 </body>
 </html>

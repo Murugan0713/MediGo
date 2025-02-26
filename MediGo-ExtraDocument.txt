@@ -8,3 +8,43 @@ const validatePhone = (phone) => {
           return "Invalid number";
         return "";
       };
+
+unmodified formValidate() code for doctors appointment code here
+
+function validateForm() {
+        let valid = true;
+
+        // Validate Email
+        const email = document.getElementById("email").value;
+        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!emailPattern.test(email)) {
+            document.getElementById("email_error").innerText = "Invalid email format.";
+            valid = false;
+        } else {
+            document.getElementById("email_error").innerText = "";
+        }
+
+        // Validate Phone Number
+        const phone = document.getElementById("phone_number").value;
+        const phonePattern = /^[6-9]\d{9}$/;
+        if (!phonePattern.test(phone)) {
+            document.getElementById("phone_error").innerText = "Enter a valid 10-digit phone number.";
+            valid = false;
+        } else {
+            document.getElementById("phone_error").innerText = "";
+        }
+
+        // Validate Appointment Date
+        const appointmentDate = new Date(document.getElementById("appointment_date").value);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        if (appointmentDate <= today) {
+            document.getElementById("appointment_date_error").innerText = "Appointment date must be in the future.";
+            valid = false;
+        } else {
+            document.getElementById("appointment_date_error").innerText = "";
+        }
+
+        return valid;
+    }

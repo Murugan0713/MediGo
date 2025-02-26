@@ -235,6 +235,111 @@
     </div>
 
     <script>
+    document.addEventListener("DOMContentLoaded", function () {
+  const form = document.getElementById("signupForm");
+
+  const inputs = {
+    username: document.getElementById("username"),
+    email: document.getElementById("email"),
+    password: document.getElementById("password"),
+    confirmPassword: document.getElementById("confirmPassword"),
+  };
+
+  // Password toggle functionality
+  document.getElementById("togglePassword").addEventListener("click", function () {
+    togglePasswordVisibility(inputs.password, this);
+  });
+
+  document.getElementById("toggleConfirmPassword").addEventListener("click", function () {
+    togglePasswordVisibility(inputs.confirmPassword, this);
+  });
+
+  function togglePasswordVisibility(input, toggleIcon) {
+    input.type = input.type === "password" ? "text" : "password";
+    toggleIcon.classList.toggle("fa-eye-slash");
+  }
+
+  // Validation functions
+  function validateUsername(username) {
+    if (!username) return "Username is required";
+    if (username.length < 4) return "Username must be at least 4 characters";
+    if (!/^[a-zA-Z0-9_]+$/.test(username)) return "Invalid characters";
+    return "";
+  }
+
+  function validateEmail(email) {
+    if (!email) return "Email is required";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return "Invalid email format";
+    return "";
+  }
+
+  function validatePassword(password) {
+    if (!password) return "Password is required";
+    if (password.length < 8) return "Minimum 8 characters";
+    if (!/[A-Z]/.test(password)) return "Needs at least one uppercase letter";
+    if (!/[0-9]/.test(password)) return "Needs at least one number";
+    return "";
+  }
+
+  function validateConfirmPassword(password, confirmPassword) {
+    if (!confirmPassword) return "Confirm password is required";
+    if (password !== confirmPassword) return "Passwords do not match";
+    return "";
+  }
+
+  // Form submission
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    let isValid = true;
+
+    const errors = {
+      username: validateUsername(inputs.username.value.trim()),
+      email: validateEmail(inputs.email.value.trim()),
+      password: validatePassword(inputs.password.value.trim()),
+      confirmPassword: validateConfirmPassword(
+        inputs.password.value.trim(),
+        inputs.confirmPassword.value.trim()
+      ),
+    };
+
+    // Show errors in the UI
+    Object.keys(errors).forEach((field) => {
+      const errorElement = document.getElementById(`${field}Error`);
+      errorElement.textContent = errors[field];
+      if (errors[field]) isValid = false;
+    });
+
+    if (isValid) {
+      
+      form.submit(); // Submit form if everything is valid
+    }
+  });
+
+  // Real-time validation
+  inputs.username.addEventListener("input", () => {
+    document.getElementById("usernameError").textContent = validateUsername(inputs.username.value.trim());
+  });
+
+  inputs.email.addEventListener("input", () => {
+    document.getElementById("emailError").textContent = validateEmail(inputs.email.value.trim());
+  });
+
+  inputs.password.addEventListener("input", () => {
+    document.getElementById("passwordError").textContent = validatePassword(inputs.password.value.trim());
+  });
+
+  inputs.confirmPassword.addEventListener("input", () => {
+    document.getElementById("confirmPasswordError").textContent = validateConfirmPassword(
+      inputs.password.value.trim(),
+      inputs.confirmPassword.value.trim()
+    );
+  });
+});
+  
+
+
+
+      /*
       const form = document.getElementById("signupForm");
       const inputs = {
         username: document.getElementById("username"),
@@ -380,7 +485,7 @@
         document.getElementById("phoneError").textContent = validatePhone(
           inputs.phone.value.trim()
         );
-      });
+      });*/
     </script>
   </body>
 </html>

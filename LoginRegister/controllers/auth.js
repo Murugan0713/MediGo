@@ -38,9 +38,7 @@ exports.register = (req, res) => {
                 console.log(error);
                 return res.status(500).send('<center><h1>Internal Server Error</h1></center>');
             }
-
-            // Send a success response after the user is successfully registered
-            //res.redirect('<center><h1>Registered successfully!</h1></center>');
+            
             res.redirect('/login');
         });
     });

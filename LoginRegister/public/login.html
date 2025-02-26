@@ -37,11 +37,25 @@
         width:6rem;
         font-weight: 600;
         background-color: white;
+        margin-left:10px;
+      }
+      .login{
+        margin-left:10px;
+        border-radius: 5px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        padding-left: 5px;
+        padding-right: 5px;
+        background-color: white;
+        font-weight: 600;
       }
       .btn:hover{
         background-color: lightgreen;
         color:black;
       }
+      .button-grp{
+        display:flex !important;
+      }
+
       /*Below For Login Form*/
       .main-login-container{
         display:flex;
@@ -112,7 +126,7 @@
       .password-toggle:hover {
         color: white;
       }
-      button {
+      .submit-btn {
         width: 100%;
         padding: 1rem;
         background:#4caf50;
@@ -188,12 +202,21 @@
       <div class="container-fluid">
         <img
           class="Logo"
-          src="../Resources/pixelcut-export.png"
+          src="./Resources/pixelcut-export.png"
           alt="Medico-Logo"
         />
-            <button class="btn" type="submit">
-              <a href="./register.html">SignUp</a>
-            </button>
+            <div class="button-grp">
+              <button class="admin login" type="submit">
+                <a href="">Admin Login</a>
+              </button>
+              <button class="doctors login" type="submit">
+                <a href="">Doctors Login</a>
+              </button>
+              <button class="btn" type="submit">
+                <a href="./register.html">SignUp</a>
+              </button>
+            </div>
+            
           </form>
         </div>
       </div>
@@ -225,7 +248,7 @@
           </div>
         </div>-->
 
-        <button type="submit">Login</button>
+        <button class="submit-btn" type="submit">Login</button>
       </form>
 
       <div class="signup-link">
@@ -283,7 +306,7 @@
             .forEach((el) => (el.textContent = ""));
           alert("Login successful!");
         }
-      });
+      });*/
        // Password toggle functionality
        const togglePassword = document.getElementById("togglePassword");
 
@@ -296,7 +319,7 @@
         togglePassword.classList.toggle("fa-eye-slash");
       });
 
-      // Real-time validation
+     /* // Real-time validation
       emailInput.addEventListener("input", () => {
         document.getElementById("emailError").textContent = validateEmail(
           emailInput.value.trim()
