@@ -215,42 +215,29 @@
           alt="Medico-Logo"
         />
             <div class="button-grp">
-              <a href="Adminlogin.html">
-                <button class="admin login" type="submit">
-                <span for="">Admin Login</span>
-              </button>
-              </a>
-              
-              <a href="doctor's login.html">
-                <button class="doctors login" type="submit">
-                <span for="">Doctor Login</span>
-              </button>
-              </a>
-              <a href="register.html">
+              <a href="login.html">
                 <button class="btn login" type="submit">
-                <span>SignIn</span>
+                <span>Back</span>
                 </button>
               </a>
               
             </div>
-            
-          </form>
         </div>
       </div>
     </nav>
 <div class="main-login-container">
     <div class="login-container">
-    <h2>SignIn</h2>
-      <form id="loginForm" action="/auth/login" method="POST">
+    <h2>AdminLogin</h2>
+      <form id="loginForm" action="/auth/Adminlogin" method="POST">
         <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" name="email" required />
+          <label for="email">AdminId</label>
+          <input type="email" id="email" name="AdminId" required />
           <div class="error" id="emailError"></div>
         </div>
 
         <div class="form-group">
           <label for="password">Password</label>
-          <input type="password" id="password" name="pass1" required />
+          <input type="password" id="password" name="Password" required />
           <i class="fas fa-eye password-toggle" id="togglePassword"></i>
           <div class="error" id="passwordError"></div>
         </div>
@@ -267,10 +254,6 @@
 
         <button class="submit-btn" type="submit">Login</button>
       </form>
-
-      <div class="signup-link">
-        Don't have an account? <a href="./register.html">Sign up here</a>
-      </div>
     </div>
 </div>
 <div class="footer-container">

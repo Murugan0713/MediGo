@@ -125,3 +125,43 @@ exports.login = (req, res) => {
                     }
                 });
             }
+
+            exports.Adminlogin = (req, res) => {
+                console.log(req.body);
+                    const { AdminId, Password } = req.body;
+                
+                    if (!AdminId || !Password) {
+                        return res.status(400).json({ message: "Please enter both AdminId and password." });
+                    }
+                
+                    // Check if user exists in the database
+                    const sql = "SELECT * FROM admin WHERE AdminId = ?";
+                    db.query(sql, [AdminId], (err, results) => {
+                        if (err) {
+                            console.error(err);
+                            return res.status(500).json({ message: "Internal Server Error" });
+                        }
+                
+                        if (results.length === 0) {
+                            return res.status(401).json({ message: "Admin Id or password are invalid" });
+                        }
+                
+                        // Compare the entered password with the stored hashed password
+                        const user = results[0];
+                        bcrypt.compare(Password, user.Password, (err, isMatch) => {
+                            if (err) {
+                                console.error(err);
+                                return res.status(500).json({ message: "Internal Server Error" });
+                            }
+                
+                            if (!isMatch) {
+                                return res.status(401).json({ message: "Admin Id or password are invalid" });
+                            }
+                
+                            // Redirect to home page on successful login
+                            res.redirect('/AdminDashboard.html');
+            
+                        });
+                    });
+                }
+            

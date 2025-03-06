@@ -13,6 +13,10 @@ router.get('/login',(req,res)=>{
     res.sendFile(path.join(__dirname, '../public', 'login.html'));
 });
 
+router.get('/Adminlogin',(req,res)=>{
+    res.sendFile(path.join(__dirname, '../public', 'Adminlogin.html'));
+});
+
 router.get('/MediGo',(req,res)=>{
     res.sendFile(path.join(__dirname, '../public', 'MediGo.html'));
 });

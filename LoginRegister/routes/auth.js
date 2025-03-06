@@ -11,6 +11,8 @@ router.post('/register',authController.register);
 
 router.post('/login',authController.login);
 
+router.post('/Adminlogin',authController.Adminlogin);
+
 router.post('/DoctorsAppointments',authController.DoctorsAppointments);
 
 module.exports = router;
