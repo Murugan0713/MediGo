@@ -25,4 +25,8 @@ router.get('/DoctorsAppointments',(req,res)=>{
     res.sendFile(path.join(__dirname, '../public', 'DoctorsAppointments.html'));
 });
 
+router.get('/AddDoctors',(req,res)=>{
+    res.sendFile(path.join(__dirname, '../public', 'AddDoctors.html'));
+});
+
 module.exports = router;
