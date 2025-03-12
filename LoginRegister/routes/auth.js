@@ -69,4 +69,28 @@ router.get("/getDoctorImage/:id", (req, res) => {
     });
 });
 
+router.delete('/deleteDoctor/:id', authController.deleteDoctor);
+router.get('/getDoctorById/:id', authController.getDoctorById);
+router.put('/updateDoctor/:id', authController.updateDoctor);
+router.post('/submitAttendance', authController.submitAttendance);
+
+// ✅ Check if Doctor ID exists
+router.get('/checkDoctorId/:id', (req, res) => {
+  const doctorId = req.params.id;
+  const sql = "SELECT doctor_id FROM DoctorsDetails WHERE doctor_id = ?";
+
+  db.query(sql, [doctorId], (err, results) => {
+      if (err) {
+          console.error("Error checking doctor ID:", err);
+          return res.status(500).json({ message: "Internal Server Error" });
+      }
+
+      if (results.length > 0) {
+          res.status(200).json({ exists: true });  // Doctor exists
+      } else {
+          res.status(404).json({ exists: false }); // Doctor does not exist
+      }
+  });
+});
+
 module.exports = router;

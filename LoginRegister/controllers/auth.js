@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs");
 const router = express.Router();
 const multer = require("multer");
 const path = require("path");
+const fs = require("fs");
 
 const db = mysql.createConnection({
   host: process.env.DATABASE_HOST,
@@ -197,7 +198,7 @@ exports.Adminlogin = (req, res) => {
   });
 };
 
-exports.AddDoctors = async (req, res) => {
+exports.AddDoctors = (req, res) => {
   console.log(req.body);
 
   const {
@@ -219,9 +220,6 @@ exports.AddDoctors = async (req, res) => {
     return res.status(400).json({ message: "Password is required!" });
   }
 
-  // Hash the password
-  const hashedPassword = await bcrypt.hash(doctor_password.toString(), 10);
-
   const image_path = req.file ? req.file.filename : null;
 
   const sql = `INSERT INTO DoctorsDetails (doctor_id, doctor_password, first_name, last_name, date_of_birth, age, gender, email, phone_number, permanent_address, current_address, doctor_specialty, image_path) 
@@ -229,7 +227,7 @@ exports.AddDoctors = async (req, res) => {
 
   const values = [
     doctor_id,
-    hashedPassword,
+    doctor_password,  // Store the password as plain text (no hashing)
     first_name,
     last_name,
     date_of_birth,
@@ -252,5 +250,135 @@ exports.AddDoctors = async (req, res) => {
     }
   });
 };
+
+
+exports.deleteDoctor = (req, res) => {
+  const doctor_id = req.params.id;
+
+  // Get image path from the database
+  const sql = "SELECT image_path FROM DoctorsDetails WHERE doctor_id = ?";
+
+  db.query(sql, [doctor_id], (err, result) => {
+    if (err) {
+      console.error("Error fetching doctor image:", err);
+      return res.status(500).json({ message: "Error fetching doctor details" });
+    }
+
+    if (result.length > 0) {
+      const imagePath = path.join(__dirname, '../uploads', result[0].image_path);
+
+      // ✅ Check if the file exists before deleting
+      if (fs.existsSync(imagePath)) {
+        fs.unlink(imagePath, (err) => {
+          if (err) {
+            console.error("Error deleting image:", err);
+          }
+        });
+      }
+
+      // ✅ Delete doctor from the database
+      const deleteSql = "DELETE FROM DoctorsDetails WHERE doctor_id = ?";
+      db.query(deleteSql, [doctor_id], (err, result) => {
+        if (err) {
+          console.error("Error deleting doctor:", err);
+          return res.status(500).json({ message: "Error deleting doctor" });
+        }
+        res.status(200).json({ message: "Doctor deleted successfully" });
+      });
+
+    } else {
+      res.status(404).json({ message: "Doctor not found" });
+    }
+  });
+};
+
+// ✅ Fetch Doctor By ID
+exports.getDoctorById = (req, res) => {
+  const doctor_id = req.params.id;
+  const sql = "SELECT * FROM DoctorsDetails WHERE doctor_id = ?";
+
+  db.query(sql, [doctor_id], (err, result) => {
+    if (err) {
+      console.error("Error fetching doctor details:", err);
+      return res.status(500).json({ message: "Error fetching doctor details" });
+    }
+    if (result.length > 0) {
+      res.status(200).json(result[0]);
+    } else {
+      res.status(404).json({ message: "Doctor not found" });
+    }
+  });
+};
+
+// ✅ Update Doctor Details
+exports.updateDoctor = (req, res) => {
+  const doctor_id = req.params.id;
+  const {
+    first_name,
+    last_name,
+    date_of_birth,
+    age,
+    gender,
+    email,
+    phone_number,
+    permanent_address,
+    current_address,
+    doctor_specialty,
+  } = req.body;
+
+  const sql = `UPDATE DoctorsDetails 
+               SET first_name=?, last_name=?, date_of_birth=?, age=?, gender=?, email=?, phone_number=?, 
+               permanent_address=?, current_address=?, doctor_specialty=? 
+               WHERE doctor_id=?`;
+
+  const values = [
+    first_name,
+    last_name,
+    date_of_birth,
+    age,
+    gender,
+    email,
+    phone_number,
+    permanent_address,
+    current_address,
+    doctor_specialty,
+    doctor_id,
+  ];
+
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      console.error("Error updating doctor:", err);
+      return res.status(500).json({ message: "Error updating doctor" });
+    }
+    res.status(200).json({ message: "Doctor updated successfully" });
+  });
+};
+
+//For storing doctors absentese
+exports.submitAttendance = (req, res) => {
+  console.log("Received Attendance Data:", req.body); // Debugging
+
+  const { doctor_id, doctor_name, leave_date, timing_from, timing_to } = req.body;
+
+  // Check if any required field is missing
+  if (!doctor_id || !doctor_name || !leave_date || !timing_from || !timing_to) {
+      return res.status(400).json({ message: "All fields are required!" });
+  }
+
+  const sql = `INSERT INTO DoctorAttendance (doctor_id, doctor_name, leave_date, timing_from, timing_to) 
+               VALUES (?, ?, ?, ?, ?)`;
+
+  const values = [doctor_id, doctor_name, leave_date, timing_from, timing_to];
+
+  db.query(sql, values, (err, result) => {
+      if (err) {
+          console.error("Error inserting attendance record:", err);
+          res.status(500).json({ message: "Error submitting attendance", error: err });
+      } else {
+          res.status(200).json({ message: "Attendance submitted successfully!" });
+      }
+  });
+};
+
 
 

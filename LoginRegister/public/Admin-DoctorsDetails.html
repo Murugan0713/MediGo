@@ -40,6 +40,9 @@
         font-weight: 600;
         background-color: white;
       }
+      .back{
+        margin-left:7px;
+      }
       /*for profile*/
       .flex-shrink-0{
         margin-left:20px;
@@ -80,7 +83,7 @@
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">Home</a>
+                <a class="nav-link active" aria-current="page" href="AdminDashBoard.html">Home</a>
               </li>
               <li class="nav-item dropdown">
                 <a
@@ -110,9 +113,6 @@
             </ul>
             <!--for profile-->
             <div class="btn-group">
-              <button type="button" class="btn btn-outline-success dropdown-toggle mb-lg-0 mb-3 me-3 " data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
-                Your Profile
-              </button>
               <ul class="dropdown-menu dropdown-menu-lg-end">
                 <li><button class="dropdown-item" type="button">Your Appointments</button></li>
                 <li><button class="dropdown-item" type="button">Another action</button></li>
@@ -131,6 +131,10 @@
               <button class="btn btn-outline-success "  type="submit">
                 Search
               </button>
+
+              <button class="btn btn-outline-success back" onclick="goBackToAdmin()" type="button">
+                Back
+            </button>
             </form>
           </div>
         </div>
@@ -184,22 +188,85 @@
       container.innerHTML = '';
       doctors.forEach(doctor => {
         const card = `
-          <div class="col-md-4 mb-3">
-            <div class="card">
-              <img src="http://localhost:3005/auth/getDoctorImage/${doctor.doctor_id}" class="card-img-top" style="height: 200px; width: 100%;" alt="Doctor Image">
+          <html>
+<head>
+  <style>
+    .doctor-card {
+      border: 1px solid black;
+      margin-bottom: 20px;
+      margin-top: 20px;
+      padding: 10px;
+      position: relative;
+      background-color:#D3D3D3;
+      border-radius:5px;
+    }
+    .image {
+      display: flex;
+      align-items: center;
+    }
+    .button-container {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    img {
+      width: 200px;
+      height: 200px;
+      margin-right: 30px;
+    }
+    .button{
+    background-color:blue;
+    color:white;
+    border-radius:5px;
+    border:none;
+    width:100px;
+    }
+    .button:hover{
+    background-color:#004085;
+    }
+    .button-danger{
+    border:none;
+    border-radius:5px;
+    color:white;
+    background-color:red;
+    }
+    .button-danger:hover{
+    background-color:#bd2130;
+    }
+  </style>
+</head>
+<body>
+  <div class="doctor-card">
+    <div class="button-container">
+      <a href="EditDoctorsPage.html?id=${doctor.doctor_id}">
+        <button class="button"> Edit </button>
+      </a>
+      <button onclick="deleteDoctor('${doctor.doctor_id}')" class=button-danger>Delete</button>
+    </div>
+    <div class="image">
+      <img src="http://localhost:3005/auth/getDoctorImage/${doctor.doctor_id}" 
+        alt="Doctor Image">
+      <div>
+        <p><strong>Doctor Name:</strong> ${doctor.first_name} ${doctor.last_name}</p>
+        <p><strong>Doctor Specialist:</strong> ${doctor.doctor_specialty}</p>
+        <p><strong>Doctor ID:</strong> ${doctor.doctor_id}</p>
+        <p><strong>Doctor Password:</strong> <span style="color: red;">${doctor.doctor_password}</span></p>
+        <p><strong>Date of Birth:</strong> ${doctor.date_of_birth.split('T')[0]}</p>
+        <p><strong>Age:</strong> ${doctor.age}</p>
+        <p><strong>Gender:</strong> ${doctor.gender}</p>
+        <p><strong>Email:</strong> ${doctor.email}</p>
+        <p><strong>Phone No:</strong> ${doctor.phone_number}</p>
+        <p><strong>Permanent Address:</strong> ${doctor.permanent_address}</p>
+        <p><strong>Current Address:</strong> ${doctor.current_address}</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
 
-              <div class="card-body">
-                <h5 class="card-title">${doctor.first_name} ${doctor.last_name}</h5>
-                <p class="card-text">
-                  <strong>Specialty:</strong> ${doctor.doctor_specialty}<br>
-                  <strong>Email:</strong> ${doctor.email}<br>
-                  <strong>Phone:</strong> ${doctor.phone_number}
-                </p>
-                <button onclick="editDoctor('${doctor.doctor_id}')" class="btn btn-primary btn-sm">Edit</button>
-                <button onclick="deleteDoctor('${doctor.doctor_id}')" class="btn btn-danger btn-sm">Delete</button>
-              </div>
-            </div>
-          </div>
         `;
         container.innerHTML += card;
       });
@@ -207,16 +274,19 @@
 
     // Delete doctor
     window.deleteDoctor = function(id) {
-      if(confirm('Are you sure you want to delete this doctor?')) {
-        fetch(`http://localhost:3005/deleteDoctor/${id}`, { method: 'DELETE' })
-          .then(() => location.reload())
-          .catch(err => console.error('Error deleting doctor:', err));
-      }
-    }
+  if(confirm('Are you sure you want to delete this doctor?')) {
+    fetch(`http://localhost:3005/auth/deleteDoctor/${id}`, { method: 'DELETE' })
+      .then(() => {
+        alert('Doctor deleted successfully');
+        location.reload();
+      })
+      .catch(err => console.error('Error deleting doctor:', err));
+  }
+}
 
     // Edit doctor (Redirect to another page or open modal)
     window.editDoctor = function(id) {
-      window.location.href = `/editDoctor.html?id=${id}`;
+      window.location.href = `/EditDoctorsPage.html?id=${id}`;
     }
 });
 
@@ -230,11 +300,9 @@
       }
     }
 
-    // Edit doctor (Redirect to another page or open modal)
-    window.editDoctor = function(id) {
-      window.location.href = `/editDoctor.html?id=${id}`;
+    function goBackToAdmin() {
+        window.location.href = "AdminDashBoard.html"; // Redirects to the Admin Dashboard
     }
- 
       </script>
 
 </body>

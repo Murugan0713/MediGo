@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Doctor</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+        .Logo {
+        height: 3rem;
+        width: 3rem;
+        margin-left: 2rem;
+        margin-right: 2rem;
+      }
+      #nav {
+        background-color: #4caf50 !important;
+      }
+      a {
+        color: black !important;
+        font-weight: 600 !important;
+        text-decoration: none;
+      }
+      a:hover {
+        color: white !important;
+      }
+      .dropdown-item:hover {
+        color: #4caf50 !important;
+      }
+      .btn {
+        font-weight: 600;
+        background-color: white;
+      }
+      /*for profile*/
+      .flex-shrink-0{
+        margin-left:20px;
+      }
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            background-color: white;
+            padding: 2%;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .error {
+            color: red;
+            font-size: 0.875rem;
+        }
+         /*footer css*/
+      .footer-container,.py-3{
+        background-color: #4caf50;
+      }
+    </style>
+</head>
+<body>
+    <nav id="nav" class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          <img
+            class="Logo"
+            src="./Resources/pixelcut-export.png"
+            alt="Medico-Logo"
+          />
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="AdminDashBoard.html">Home</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a
+                  class="nav-link dropdown-toggle"
+                  href="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Services
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="#">Symptom Checker</a></li>
+                  <li><a class="dropdown-item" href="#">Health Articles</a></li>
+                  <li><hr class="dropdown-divider" /></li>
+                  <li>
+                    <a class="dropdown-item" href="#">Doctor Appointments</a>
+                  </li>
+                </ul>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="contact us.html">Contact Us</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="aboutus.html">About Us</a>
+              </li>
+            </ul>
+            <!--for profile-->
+            <div class="btn-group">
+              <button type="button" class="btn btn-outline-success dropdown-toggle mb-lg-0 mb-3 me-3 " data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
+                Your Profile
+              </button>
+              <ul class="dropdown-menu dropdown-menu-lg-end">
+                <li><button class="dropdown-item" type="button">Your Appointments</button></li>
+                <li><button class="dropdown-item" type="button">Another action</button></li>
+                <li><hr class="dropdown-divider" /></li>
+                <li><button class="dropdown-item" type="button">Log Out</button></li>
+              </ul>
+            </div>
+            <!--ends here-->
+            <form class="d-flex" role="search">
+              <input
+                class="form-control me-2"
+                type="search"
+                placeholder="Search"
+                aria-label="Search"
+              />
+              <button class="btn btn-outline-success "  type="submit">
+                Search
+              </button>
+            </form>
+          </div>
+        </div>
+      </nav>
+
+<div class="container">
+    <h2>Edit Doctor Details</h2>
+    <form id="editDoctorForm">
+        <input type="text" id="first_name" name="first_name" placeholder="First Name" required>
+        <input type="text" id="last_name" name="last_name" placeholder="Last Name" required>
+        <input type="date" id="date_of_birth" name="date_of_birth" required>
+        <input type="text" id="age" name="age" placeholder="Age" readonly>
+        <select id="gender" name="gender" required>
+            <option value="">Please Select</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Transgender">Transgender</option>
+            <option value="Not Willing">Not Willing To Ask</option>
+        </select>
+        <input type="email" id="email" name="email" placeholder="Email" required>
+        <input type="text" id="phone_number" name="phone_number" placeholder="Phone Number" required>
+        <input type="text" id="permanent_address" name="permanent_address" placeholder="Permanent Address" required>
+        <input type="text" id="current_address" name="current_address" placeholder="Current Address" required>
+        <div>
+            <label for="doctor-specialty">Choose a doctor specialty:</label>
+            <select id="doctor-specialty" name="doctor_specialty" required >
+        <option value="">Please Select</option>
+        <optgroup label="General">
+            <option value="General Physician">General Physician</option>
+            <option value="Family Doctor">Family Doctor</option>
+        </optgroup>
+
+        <optgroup label="Specialists">
+            <option value="Cardiologist">Cardiologist</option>
+            <option value="Dermatologist">Dermatologist</option>
+            <option value="Neurologist">Neurologist</option>
+            <option value="Gastroenterologist">Gastroenterologist</option>
+            <option value="Psychiatrist">Psychiatrist</option>
+        </optgroup>
+
+        <optgroup label="Surgical Specialists">
+            <option value="General Surgeon">General Surgeon</option>
+            <option value="Orthopedic Surgeon">Orthopedic Surgeon</option>
+            <option value="Neurosurgeon">Neurosurgeon</option>
+            <option value="Cardiac Surgeon">Cardiac Surgeon</option>
+        </optgroup>
+
+        <optgroup label="Women & Child Health">
+            <option value="Gynecologist">Gynecologist & Obstetrician</option>
+            <option value="Pediatrician">Pediatrician</option>
+        </optgroup>
+
+        <optgroup label="ENT & Eye Care">
+            <option value="Ophthalmologist">Ophthalmologist (Eye Specialist)</option>
+            <option value="ENT Specialist">ENT Specialist</option>
+        </optgroup>
+
+        <optgroup label="Alternative Medicine">
+            <option value="Ayurvedic Doctor">Ayurvedic Doctor</option>
+            <option value="Homeopathy Doctor">Homeopathy Doctor</option>
+        </optgroup>
+
+        <optgroup label="Other Specialists">
+            <option value="Dentist">Dentist</option>
+            <option value="Urologist">Urologist</option>
+            <option value="Sexologist">Sexologist</option>
+        </optgroup>
+      </select>
+        </div>
+        <button type="submit">Update Doctor</button>
+    </form>
+</div>
+<div class="footer-container">
+    <footer class="py-3">
+      <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+        <li class="nav-item"><a href="#" class="nav-link px-2 " style="color: black;">Home</a></li>
+        <li class="nav-item"><a href="#" class="nav-link px-2 " style="color: black;">Services</a></li>
+        <!--<li class="nav-item"><a href="#" class="nav-link px-2 " style="color: black;">Pricing</a></li>-->
+        <li class="nav-item"><a href="contact us.html" class="nav-link px-2 " style="color: black;">Contact Us</a></li>
+        <li class="nav-item"><a href="aboutus.html" class="nav-link px-2 " style="color: black;">About Us</a></li>
+      </ul>
+      <p class="text-center" style="color: black;">© 2024 Company, Inc</p>
+    </footer>
+  </div>
+<script>
+const urlParams = new URLSearchParams(window.location.search);
+const doctorId = urlParams.get('id');
+
+if (!doctorId) {
+    alert('Doctor ID not found.');
+    window.location.href = '/Admin-DoctorsDetails.html';
+} else {
+    fetch(`http://localhost:3005/auth/getDoctorById/${doctorId}`)
+    .then(response => response.json())
+    .then(doctor => {
+        if (doctor.message === "Doctor not found") {
+            alert('Doctor not found.');
+            window.location.href = '/Admin-DoctorsDetails.html';
+        } else {
+            document.getElementById('first_name').value = doctor.first_name;
+            document.getElementById('last_name').value = doctor.last_name;
+            document.getElementById('date_of_birth').value = doctor.date_of_birth.split('T')[0];
+            document.getElementById('age').value = doctor.age;
+            document.getElementById('gender').value = doctor.gender;
+            document.getElementById('email').value = doctor.email;
+            document.getElementById('phone_number').value = doctor.phone_number;
+            document.getElementById('permanent_address').value = doctor.permanent_address;
+            document.getElementById('current_address').value = doctor.current_address;
+
+            // Pre-fill specialty
+            const specialtySelect = document.getElementById('doctor-specialty');
+            for (let i = 0; i < specialtySelect.options.length; i++) {
+                if (specialtySelect.options[i].value === doctor.doctor_specialty) {
+                    specialtySelect.selectedIndex = i;
+                    break;
+                }
+            }
+        }
+    });
+}
+
+document.getElementById('editDoctorForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const updatedDoctor = {
+        first_name: document.getElementById('first_name').value,
+        last_name: document.getElementById('last_name').value,
+        date_of_birth: document.getElementById('date_of_birth').value,
+        age: document.getElementById('age').value,
+        gender: document.getElementById('gender').value,
+        email: document.getElementById('email').value,
+        phone_number: document.getElementById('phone_number').value,
+        permanent_address: document.getElementById('permanent_address').value,
+        current_address: document.getElementById('current_address').value,
+        doctor_specialty: document.getElementById('doctor-specialty').value
+    };
+
+    fetch(`http://localhost:3005/auth/updateDoctor/${doctorId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(updatedDoctor)
+    }).then(response => response.json())
+    .then(result => {
+        if(result.message === "Doctor updated successfully") {
+            alert('Doctor updated successfully!');
+            window.location.href = '/Admin-DoctorsDetails.html';
+        } else {
+            alert('Failed to update doctor.');
+        }
+    })
+    .catch(err => console.error('Error updating doctor:', err));
+});
+</script>
+</body>
+</html>
