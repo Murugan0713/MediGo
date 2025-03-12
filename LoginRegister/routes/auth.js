@@ -93,4 +93,35 @@ router.get('/checkDoctorId/:id', (req, res) => {
   });
 });
 
+router.post('/DoctorLogin', (req, res) => {
+  const { doctor_id, password } = req.body;
+
+  if (!doctor_id || !password) {
+      return res.status(400).json({ message: "Please enter both Doctor ID and password." });
+  }
+
+  const sql = "SELECT * FROM DoctorsDetails WHERE doctor_id = ?";
+  db.query(sql, [doctor_id], (err, results) => {
+      if (err) {
+          console.error("Error fetching doctor data:", err);
+          return res.status(500).json({ message: "Internal Server Error" });
+      }
+
+      if (results.length === 0) {
+          return res.status(401).json({ message: "Invalid Doctor ID or Password" });
+      }
+
+      const doctor = results[0];
+
+      // Compare entered password with stored password
+      if (password !== doctor.doctor_password) {
+          return res.status(401).json({ message: "Invalid Doctor ID or Password" });
+      }
+
+      // ✅ Successful login: Redirect to Doctors Dashboard
+      res.status(200).json({ message: "Login successful!", redirect: "/DoctorsDashboard.html" });
+  });
+});
+
+
 module.exports = router;

@@ -215,62 +215,35 @@
           alt="Medico-Logo"
         />
             <div class="button-grp">
-              <a href="Adminlogin.html">
-                <button class="admin login" type="submit">
-                <span for="">Admin Login</span>
-              </button>
-              </a>
-              
-              <a href="DoctorsLogin.html">
-                <button class="doctors login" type="submit">
-                <span for="">Doctor Login</span>
-              </button>
-              </a>
-              <a href="register.html">
+              <a href="login.html">
                 <button class="btn login" type="submit">
-                <span>SignIn</span>
+                <span>Back</span>
                 </button>
               </a>
               
             </div>
-            
-          </form>
         </div>
       </div>
     </nav>
 <div class="main-login-container">
     <div class="login-container">
-    <h2>SignIn</h2>
-      <form id="loginForm" action="/auth/login" method="POST">
+    <h2>DoctorsLogin</h2>
+    <form id="doctorLoginForm">
         <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" name="email" required />
-          <div class="error" id="emailError"></div>
+            <label for="doctor_id">Doctor ID</label>
+            <input type="text" id="doctor_id" name="doctor_id" required />
+            <div class="error" id="idError"></div>
         </div>
-
+    
         <div class="form-group">
-          <label for="password">Password</label>
-          <input type="password" id="password" name="pass1" required />
-          <i class="fas fa-eye password-toggle" id="togglePassword"></i>
-          <div class="error" id="passwordError"></div>
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required />
+            <i class="fas fa-eye password-toggle" id="togglePassword"></i>
+            <div class="error" id="passwordError"></div>
         </div>
-
-       <!--- <div class="options">
-          <label class="remember-me">
-            <input type="checkbox" id="rememberMe" />
-            Remember me
-          </label>
-          <div class="forgot-password">
-            <a href="#">Forgot Password?</a>
-          </div>
-        </div>-->
-
+    
         <button class="submit-btn" type="submit">Login</button>
-      </form>
-
-      <div class="signup-link">
-        Don't have an account? <a href="./register.html">Sign up here</a>
-      </div>
+    </form>
     </div>
 </div>
 <div class="footer-container">
@@ -283,71 +256,58 @@
   </footer>
 </div>
 
-    <script>
-      /*const form = document.getElementById("loginForm");
-      const emailInput = document.getElementById("email");
-      const password = document.getElementById("password");
-
-      // Validation functions
-      const validateEmail = (email) => {
-        if (!email) return "Email is required";
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return "Invalid email";
-        return "";
-      };
-
-      const validatePassword = (password) => {
-        if (!password) return "Password is required";
-        return "";
-      };
-
-      // Form submission handler
-      form.addEventListener("submit", (e) => {
-        e.preventDefault();
-        let isValid = true;
-
-        const errors = {
-          email: validateEmail(emailInput.value.trim()),
-          password: validatePassword(password.value.trim()),
-        };
-
-        Object.keys(errors).forEach((field) => {
-          const errorElement = document.getElementById(`${field}Error`);
-          errorElement.textContent = errors[field];
-          if (errors[field]) isValid = false;
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const loginForm = document.getElementById("doctorLoginForm");
+    
+        loginForm.addEventListener("submit", function (event) {
+            event.preventDefault(); // Prevent default form submission
+    
+            const doctorId = document.getElementById("doctor_id").value.trim();
+            const password = document.getElementById("password").value.trim();
+            const idError = document.getElementById("idError");
+            const passwordError = document.getElementById("passwordError");
+    
+            idError.innerText = "";
+            passwordError.innerText = "";
+    
+            if (!doctorId || !password) {
+                alert("❌ Please enter both Doctor ID and Password!");
+                return;
+            }
+    
+            // Send login request to backend
+            fetch("/auth/DoctorLogin", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ doctor_id: doctorId, password: password })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message === "Login successful!") {
+                    alert("✅ Login successful! Redirecting to dashboard...");
+                    window.location.href = data.redirect;
+                } else {
+                    alert("❌ " + data.message);
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("⚠️ An error occurred. Please try again.");
+            });
         });
-
-        if (isValid) {
-          form.reset();
-          document
-            .querySelectorAll(".error")
-            .forEach((el) => (el.textContent = ""));
-          alert("Login successful!");
-        }
-      });*/
-       // Password toggle functionality
-       const togglePassword = document.getElementById("togglePassword");
-
-      togglePassword.addEventListener("click", () => {
-        const type =
-          password.getAttribute("type") === "password"
-            ? "text"
-            : "password";
-        password.setAttribute("type", type);
-        togglePassword.classList.toggle("fa-eye-slash");
-      });
-
-     /* // Real-time validation
-      emailInput.addEventListener("input", () => {
-        document.getElementById("emailError").textContent = validateEmail(
-          emailInput.value.trim()
-        );
-      });
-
-      password.addEventListener("input", () => {
-        document.getElementById("passwordError").textContent = validatePassword(
-          password.value.trim()
-        );
-      });*/
+    
+        // Toggle password visibility
+        document.getElementById("togglePassword").addEventListener("click", function () {
+            const passwordField = document.getElementById("password");
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+            } else {
+                passwordField.type = "password";
+            }
+        });
+    });
     </script>
-  </body>
+
+</body>
 </html>
