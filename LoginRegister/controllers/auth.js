@@ -311,47 +311,58 @@ exports.getDoctorById = (req, res) => {
 };
 
 // ✅ Update Doctor Details
-exports.updateDoctor = (req, res) => {
+exports.updateDoctor = async (req, res) => {
   const doctor_id = req.params.id;
   const {
-    first_name,
-    last_name,
-    date_of_birth,
-    age,
-    gender,
-    email,
-    phone_number,
-    permanent_address,
-    current_address,
-    doctor_specialty,
+      doctor_id: new_doctor_id,
+      doctor_password,
+      first_name,
+      last_name,
+      date_of_birth,
+      age,
+      gender,
+      email,
+      phone_number,
+      permanent_address,
+      current_address,
+      doctor_specialty
   } = req.body;
 
-  const sql = `UPDATE DoctorsDetails 
-               SET first_name=?, last_name=?, date_of_birth=?, age=?, gender=?, email=?, phone_number=?, 
-               permanent_address=?, current_address=?, doctor_specialty=? 
-               WHERE doctor_id=?`;
+  try {
+      let hashedPassword = doctor_password ? await bcrypt.hash(doctor_password, 8) : null;
 
-  const values = [
-    first_name,
-    last_name,
-    date_of_birth,
-    age,
-    gender,
-    email,
-    phone_number,
-    permanent_address,
-    current_address,
-    doctor_specialty,
-    doctor_id,
-  ];
+      const sql = `UPDATE DoctorsDetails 
+                   SET doctor_id=?, doctor_password=?, first_name=?, last_name=?, date_of_birth=?, 
+                       age=?, gender=?, email=?, phone_number=?, permanent_address=?, current_address=?, doctor_specialty=? 
+                   WHERE doctor_id=?`;
 
-  db.query(sql, values, (err, result) => {
-    if (err) {
-      console.error("Error updating doctor:", err);
-      return res.status(500).json({ message: "Error updating doctor" });
-    }
-    res.status(200).json({ message: "Doctor updated successfully" });
-  });
+      const values = [
+          new_doctor_id || doctor_id,  // Update Doctor ID
+          hashedPassword || null,       // Update Password (if provided)
+          first_name,
+          last_name,
+          date_of_birth,
+          age,
+          gender,
+          email,
+          phone_number,
+          permanent_address,
+          current_address,
+          doctor_specialty,
+          doctor_id
+      ];
+
+      db.query(sql, values, (err, result) => {
+          if (err) {
+              console.error("Error updating doctor:", err);
+              return res.status(500).json({ message: "Error updating doctor" });
+          }
+          res.status(200).json({ message: "Doctor updated successfully" });
+      });
+  } catch (err) {
+      console.error("Error hashing password:", err);
+      res.status(500).json({ message: "Internal server error" });
+  }
 };
 
 //For storing doctors absentese

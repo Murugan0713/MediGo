@@ -4,6 +4,7 @@ const path = require ('path');
 const multer = require('multer');
 const router = express.Router();
 const mysql = require ("mysql");
+const nodemailer = require("nodemailer");
 
 // Setup multer for image uploads
 const storage = multer.diskStorage({
@@ -120,6 +121,43 @@ router.post('/DoctorLogin', (req, res) => {
 
       // ✅ Successful login: Redirect to Doctors Dashboard
       res.status(200).json({ message: "Login successful!", redirect: "/DoctorsDashboard.html" });
+  });
+});
+
+
+router.post("/contactAdmin", (req, res) => {
+  const { doctor_email, subject, message } = req.body;
+
+  if (!doctor_email || !subject || !message) {
+      console.log("❌ Email not sent: Missing fields.");
+      return res.status(400).json({ success: false, message: "All fields are required!" });
+  }
+
+  // ✅ Configure Nodemailer
+  const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+          user: "sagaaarun@gmail.com", // Replace with your real admin email
+          pass: "miuy opov yrla mpkd" // Replace with the app password
+      }
+  });
+
+  const mailOptions = {
+      from: doctor_email,
+      to: "sagaaarun@gmail.com", // Admin's email
+      subject: `Doctor Inquiry: ${subject}`,
+      text: `From: ${doctor_email}\n\nMessage:\n${message}`
+  };
+
+  // ✅ Send the email
+  transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+          console.error("❌ Email failed:", error);
+          return res.status(500).json({ success: false, message: "Failed to send email." });
+      } else {
+          console.log("✅ Email sent successfully:", info.response);
+          return res.status(200).json({ success: true, message: "Email sent successfully!" });
+      }
   });
 });
 

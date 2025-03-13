@@ -155,6 +155,13 @@
 <div class="container">
     <h2>Edit Doctor Details</h2>
     <form id="editDoctorForm">
+      <input type="text" id="doctor_id" name="doctor_id" placeholder="Doctor ID" required>
+      <div style="position: relative;">
+        <input type="password" id="doctor_password" name="doctor_password" placeholder="New Password (Leave blank to keep current password)">
+        <button type="button" id="togglePassword" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer;">
+            👁️
+        </button>
+    </div>    
         <input type="text" id="first_name" name="first_name" placeholder="First Name" required>
         <input type="text" id="last_name" name="last_name" placeholder="Last Name" required>
         <input type="date" id="date_of_birth" name="date_of_birth" required>
@@ -246,6 +253,7 @@ if (!doctorId) {
             alert('Doctor not found.');
             window.location.href = '/Admin-DoctorsDetails.html';
         } else {
+            document.getElementById('doctor_id').value = doctor.doctor_id;
             document.getElementById('first_name').value = doctor.first_name;
             document.getElementById('last_name').value = doctor.last_name;
             document.getElementById('date_of_birth').value = doctor.date_of_birth.split('T')[0];
@@ -255,23 +263,18 @@ if (!doctorId) {
             document.getElementById('phone_number').value = doctor.phone_number;
             document.getElementById('permanent_address').value = doctor.permanent_address;
             document.getElementById('current_address').value = doctor.current_address;
-
-            // Pre-fill specialty
-            const specialtySelect = document.getElementById('doctor-specialty');
-            for (let i = 0; i < specialtySelect.options.length; i++) {
-                if (specialtySelect.options[i].value === doctor.doctor_specialty) {
-                    specialtySelect.selectedIndex = i;
-                    break;
-                }
-            }
+            document.getElementById('doctor-specialty').value = doctor.doctor_specialty;
         }
-    });
+    })
+    .catch(err => console.error('Error fetching doctor details:', err));
 }
 
 document.getElementById('editDoctorForm').addEventListener('submit', function(event) {
     event.preventDefault();
 
     const updatedDoctor = {
+        doctor_id: document.getElementById('doctor_id').value,
+        doctor_password: document.getElementById('doctor_password').value, // New password (if changed)
         first_name: document.getElementById('first_name').value,
         last_name: document.getElementById('last_name').value,
         date_of_birth: document.getElementById('date_of_birth').value,
@@ -292,7 +295,7 @@ document.getElementById('editDoctorForm').addEventListener('submit', function(ev
         body: JSON.stringify(updatedDoctor)
     }).then(response => response.json())
     .then(result => {
-        if(result.message === "Doctor updated successfully") {
+        if (result.message === "Doctor updated successfully") {
             alert('Doctor updated successfully!');
             window.location.href = '/Admin-DoctorsDetails.html';
         } else {
@@ -301,6 +304,19 @@ document.getElementById('editDoctorForm').addEventListener('submit', function(ev
     })
     .catch(err => console.error('Error updating doctor:', err));
 });
+
+//Toogle to see the password 
+document.getElementById("togglePassword").addEventListener("click", function () {
+    const passwordField = document.getElementById("doctor_password");
+    if (passwordField.type === "password") {
+        passwordField.type = "text";
+        this.textContent = "🙈"; // Hide icon
+    } else {
+        passwordField.type = "password";
+        this.textContent = "👁️"; // Show icon
+    }
+});
+
 </script>
 </body>
 </html>
