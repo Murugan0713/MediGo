@@ -9,6 +9,31 @@
       rel="stylesheet"
     />
     <style>
+             .Logo {
+    height: 3rem;
+    width: 3rem;
+    margin-left: 2rem;
+    margin-right: 2rem;
+  }
+  #nav {
+    background-color: #4caf50 !important;
+  }
+  a {
+    color: black !important;
+    font-weight: 600 !important;
+    text-decoration: none;
+  }
+  a:hover {
+    color: white !important;
+  }
+  .dropdown-item:hover {
+    color: #4caf50 !important;
+  }
+  .btnn {
+    font-weight: 600;
+    background-color: white;
+  }
+
       body {
         font-family: Arial, sans-serif;
         background-color: #f4f4f4;
@@ -32,9 +57,34 @@
         font-size: 14px;
         display: none;
       }
+       /*Footer Section*/
+    .footer-container,.py-3{
+        background-color: #4caf50;
+      }
+      .nav-link{
+        color: black !important;
+        font-weight: 600 !important;
+      }
+      .nav-link:hover {
+        color:white !important;
+      }
     </style>
   </head>
   <body>
+    <nav id="nav" class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          <img
+            class="Logo"
+            src="./Resources/pixelcut-export.png"
+            alt="Medico-Logo"
+          />
+            
+              <a href="DoctorsdashBoard.html"><button class="btn btn-outline-success btnn" type="submit">
+                back
+              </button></a>
+          </div>
+        </div>
+      </nav>
     <div class="container">
       <h2>Contact Admin</h2>
       <form id="contactForm">
@@ -88,6 +138,16 @@
         </button>
       </form>
     </div>
+
+    <div class="footer-container">
+        <footer class="py-3">
+          <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+            <li class="nav-item"><a href="#" class="nav-link px-2 " style="color: black;">Contact Us</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 " style="color: black;">About</a></li>
+          </ul>
+          <p class="text-center" style="color: black;">© 2024 Company, Inc</p>
+        </footer>
+      </div>
 
     <script>
       document.addEventListener("DOMContentLoaded", function () {
