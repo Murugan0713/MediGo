@@ -3,6 +3,7 @@ const path = require ('path');
 const mysql = require ("mysql");
 const dotenv = require ('dotenv');
 const multer = require('multer');
+const session = require('express-session');
 
 dotenv.config({path: './.env'})
 
@@ -75,6 +76,15 @@ app.get('/auth/getDoctors', (req, res) => {
         }
     });
 });
+
+
+app.use(session({
+    secret: 'your-secret-key', // Change this to a strong secret key
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false } // Change to `true` if using HTTPS
+}));
+
 
 app.listen(3005,()=>{
     console.log("server started on Port 3005");

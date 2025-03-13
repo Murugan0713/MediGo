@@ -273,19 +273,25 @@ document.getElementById('editDoctorForm').addEventListener('submit', function(ev
     event.preventDefault();
 
     const updatedDoctor = {
-        doctor_id: document.getElementById('doctor_id').value,
-        doctor_password: document.getElementById('doctor_password').value, // New password (if changed)
-        first_name: document.getElementById('first_name').value,
-        last_name: document.getElementById('last_name').value,
-        date_of_birth: document.getElementById('date_of_birth').value,
-        age: document.getElementById('age').value,
-        gender: document.getElementById('gender').value,
-        email: document.getElementById('email').value,
-        phone_number: document.getElementById('phone_number').value,
-        permanent_address: document.getElementById('permanent_address').value,
-        current_address: document.getElementById('current_address').value,
-        doctor_specialty: document.getElementById('doctor-specialty').value
-    };
+    doctor_id: document.getElementById('doctor_id').value,
+    first_name: document.getElementById('first_name').value,
+    last_name: document.getElementById('last_name').value,
+    date_of_birth: document.getElementById('date_of_birth').value,
+    age: document.getElementById('age').value,
+    gender: document.getElementById('gender').value,
+    email: document.getElementById('email').value,
+    phone_number: document.getElementById('phone_number').value,
+    permanent_address: document.getElementById('permanent_address').value,
+    current_address: document.getElementById('current_address').value,
+    doctor_specialty: document.getElementById('doctor-specialty').value
+};
+
+// Check if password field is not empty before sending
+const passwordField = document.getElementById('doctor_password').value;
+if (passwordField.trim() !== "") {
+    updatedDoctor.doctor_password = passwordField;
+}
+
 
     fetch(`http://localhost:3005/auth/updateDoctor/${doctorId}`, {
         method: 'PUT',

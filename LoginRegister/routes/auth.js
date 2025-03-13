@@ -5,6 +5,7 @@ const multer = require('multer');
 const router = express.Router();
 const mysql = require ("mysql");
 const nodemailer = require("nodemailer");
+const session = require("express-session");
 
 // Setup multer for image uploads
 const storage = multer.diskStorage({
@@ -17,6 +18,14 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
+
+require('dotenv').config(); 
+router.use(session({
+  secret: process.env.SESSION_SECRET, // Replace with a strong secret key
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false } // Set `true` if using HTTPS
+}));
 
 const db=mysql.createConnection({
     host: process.env.DATABASE_HOST,
@@ -94,8 +103,9 @@ router.get('/checkDoctorId/:id', (req, res) => {
   });
 });
 
+// ✅ Doctor Login Route (Fix Applied)
 router.post('/DoctorLogin', (req, res) => {
-  const { doctor_id, password } = req.body;
+  const { doctor_id, password } = req.body; // Ensure `doctor_id` is extracted properly
 
   if (!doctor_id || !password) {
       return res.status(400).json({ message: "Please enter both Doctor ID and password." });
@@ -114,21 +124,22 @@ router.post('/DoctorLogin', (req, res) => {
 
       const doctor = results[0];
 
-      // Compare entered password with stored password
-      if (password !== doctor.doctor_password) {
-          return res.status(401).json({ message: "Invalid Doctor ID or Password" });
+      // ✅ Check if session exists before setting `doctor_id`
+      if (!req.session) {
+          return res.status(500).json({ message: "Session is not available" });
       }
 
-      // ✅ Successful login: Redirect to Doctors Dashboard
+      // ✅ Store Doctor ID in session correctly
+      req.session.doctor_id = doctor.doctor_id;
+
       res.status(200).json({ message: "Login successful!", redirect: "/DoctorsDashboard.html" });
   });
 });
 
-
 router.post("/contactAdmin", (req, res) => {
-  const { doctor_email, subject, message } = req.body;
+  const { doctor_id, doctor_email, subject, message } = req.body;
 
-  if (!doctor_email || !subject || !message) {
+  if (!doctor_id || !doctor_email || !subject || !message) {
       console.log("❌ Email not sent: Missing fields.");
       return res.status(400).json({ success: false, message: "All fields are required!" });
   }
@@ -145,8 +156,8 @@ router.post("/contactAdmin", (req, res) => {
   const mailOptions = {
       from: doctor_email,
       to: "sagaaarun@gmail.com", // Admin's email
-      subject: `Doctor Inquiry: ${subject}`,
-      text: `From: ${doctor_email}\n\nMessage:\n${message}`
+      subject: `Doctor Inquiry from ID: ${doctor_id} - ${subject}`,
+      text: `Doctor ID: ${doctor_id}\nDoctor Email: ${doctor_email}\n\nMessage:\n${message}`
   };
 
   // ✅ Send the email
@@ -160,6 +171,17 @@ router.post("/contactAdmin", (req, res) => {
       }
   });
 });
+
+
+// ✅ API to Get Current Logged-in Doctor's ID
+router.get("/getCurrentDoctor", (req, res) => {
+  if (req.session && req.session.doctor_id) {
+      res.json({ doctor_id: req.session.doctor_id });
+  } else {
+      res.status(401).json({ message: "Doctor not logged in" });
+  }
+});
+
 
 
 module.exports = router;

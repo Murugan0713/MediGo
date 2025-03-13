@@ -198,36 +198,38 @@ exports.Adminlogin = (req, res) => {
   });
 };
 
-exports.AddDoctors = (req, res) => {
+exports.AddDoctors = async (req, res) => {
   console.log(req.body);
 
   const {
-    doctor_id,
-    doctor_password,
-    first_name,
-    last_name,
-    date_of_birth,
-    age,
-    gender,
-    email,
-    phone_number,
-    permanent_address,
-    current_address,
-    doctor_specialty,
+      doctor_id,
+      doctor_password,
+      first_name,
+      last_name,
+      date_of_birth,
+      age,
+      gender,
+      email,
+      phone_number,
+      permanent_address,
+      current_address,
+      doctor_specialty
   } = req.body;
 
   if (!doctor_password) {
-    return res.status(400).json({ message: "Password is required!" });
+      return res.status(400).json({ message: "Password is required!" });
   }
 
-  const image_path = req.file ? req.file.filename : null;
+  let plainPassword = doctor_password;  // Store password as plain text
+
+  const image_path = req.file ? req.file.filename : 'default.jpg'; // ✅ Fix here
 
   const sql = `INSERT INTO DoctorsDetails (doctor_id, doctor_password, first_name, last_name, date_of_birth, age, gender, email, phone_number, permanent_address, current_address, doctor_specialty, image_path) 
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
-  const values = [
+const values = [
     doctor_id,
-    doctor_password,  // Store the password as plain text (no hashing)
+    plainPassword,  // ✅ Storing password as plain text
     first_name,
     last_name,
     date_of_birth,
@@ -238,18 +240,20 @@ exports.AddDoctors = (req, res) => {
     permanent_address,
     current_address,
     doctor_specialty,
-    image_path,
-  ];
+    image_path
+];
+
 
   db.query(sql, values, (err, result) => {
-    if (err) {
-      console.error("Error inserting doctor details:", err);
-      res.status(500).json({ message: "Error adding doctor", error: err });
-    } else {
-      res.status(200).json({ message: "Doctor added successfully!" });
-    }
+      if (err) {
+          console.error("Error inserting doctor details:", err);
+          res.status(500).json({ message: "Error adding doctor", error: err });
+      } else {
+          res.status(200).json({ message: "Doctor added successfully!" });
+      }
   });
 };
+
 
 
 exports.deleteDoctor = (req, res) => {
@@ -329,28 +333,28 @@ exports.updateDoctor = async (req, res) => {
   } = req.body;
 
   try {
-      let hashedPassword = doctor_password ? await bcrypt.hash(doctor_password, 8) : null;
+    let plainPassword = doctor_password || oldPassword;  // Keep old password if not changed
 
-      const sql = `UPDATE DoctorsDetails 
-                   SET doctor_id=?, doctor_password=?, first_name=?, last_name=?, date_of_birth=?, 
-                       age=?, gender=?, email=?, phone_number=?, permanent_address=?, current_address=?, doctor_specialty=? 
-                   WHERE doctor_id=?`;
+    const sql = `UPDATE DoctorsDetails 
+    SET doctor_id=?, doctor_password=?, first_name=?, last_name=?, date_of_birth=?, 
+        age=?, gender=?, email=?, phone_number=?, permanent_address=?, current_address=?, doctor_specialty=? 
+    WHERE doctor_id=?`;
 
-      const values = [
-          new_doctor_id || doctor_id,  // Update Doctor ID
-          hashedPassword || null,       // Update Password (if provided)
-          first_name,
-          last_name,
-          date_of_birth,
-          age,
-          gender,
-          email,
-          phone_number,
-          permanent_address,
-          current_address,
-          doctor_specialty,
-          doctor_id
-      ];
+const values = [
+new_doctor_id || doctor_id,
+plainPassword,  // ✅ Storing password as plain text
+first_name,
+last_name,
+date_of_birth,
+age,
+gender,
+email,
+phone_number,
+permanent_address,
+current_address,
+doctor_specialty,
+doctor_id
+];
 
       db.query(sql, values, (err, result) => {
           if (err) {
