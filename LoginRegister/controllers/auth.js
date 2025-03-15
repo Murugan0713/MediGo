@@ -98,62 +98,6 @@ exports.login = (req, res) => {
     });
   });
 };
-
-exports.DoctorsAppointments = (req, res) => {
-  console.log(req.body);
-  const {
-    first_name,
-    last_name,
-    dob,
-    age,
-    gender,
-    email,
-    phone_number,
-    address1,
-    address2,
-    appointment_date,
-    appointment_time,
-    doctor_specialty,
-  } = req.body;
-  db.connect((err) => {
-    if (err) {
-      console.error("Database connection failed: " + err.stack);
-      return;
-    }
-    console.log("Connected to MySQL database.");
-  });
-
-  const sql = `INSERT INTO patients_details 
-                (first_name, last_name, dob, age, gender, email, phone_number, address1, address2, appointment_date, appointment_time, doctor_specialty) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-
-  const values = [
-    first_name,
-    last_name,
-    dob,
-    age,
-    gender,
-    email,
-    phone_number,
-    address1,
-    address2,
-    appointment_date,
-    appointment_time,
-    doctor_specialty,
-  ];
-
-  db.query(sql, values, (err, result) => {
-    if (err) {
-      console.error("Error inserting data:", err);
-      res
-        .status(500)
-        .json({ message: "Error booking appointment", error: err });
-    } else {
-      res.status(200).json({ message: "Appointment booked successfully!" });
-    }
-  });
-};
-
 exports.Adminlogin = (req, res) => {
   console.log(req.body);
   const { AdminId, Password } = req.body;

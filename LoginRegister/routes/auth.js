@@ -6,6 +6,9 @@ const router = express.Router();
 const mysql = require ("mysql");
 const nodemailer = require("nodemailer");
 const session = require("express-session");
+const cors = require("cors");
+
+router.use(cors());
 
 // Setup multer for image uploads
 const storage = multer.diskStorage({
@@ -40,7 +43,6 @@ app.use(express.static(path.join(__dirname, '../public')));
 router.post('/register',authController.register);
 router.post('/login',authController.login);
 router.post('/Adminlogin',authController.Adminlogin);
-router.post('/DoctorsAppointments',authController.DoctorsAppointments);
 
 // ✅ Now use multer for image upload while adding doctor
 router.post('/AddDoctors', upload.single('image_path'), authController.AddDoctors);
@@ -182,6 +184,59 @@ router.get("/getCurrentDoctor", (req, res) => {
   }
 });
 
+router.get("/getDoctorsBySpecialty/:specialty", (req, res) => {
+  const specialty = decodeURIComponent(req.params.specialty);
+  const sql = "SELECT * FROM doctorsdetails WHERE doctor_specialty = ?";
+
+  db.query(sql, [specialty], (err, results) => {
+      if (err) {
+          console.error("Error fetching doctors:", err);
+          return res.status(500).json({ message: "Database error", error: err });
+      }
+
+      if (results.length === 0) {
+          return res.status(404).json({ message: "No doctors found for this specialty" });
+      }
+
+      res.status(200).json(results);
+  });
+});
+
+
+//adding doctors appointment details into data base
+router.post("/DoctorsAppointments", (req, res) => {
+  const {
+      first_name,
+      last_name,
+      dob,
+      age,
+      gender,
+      email,
+      phone_number,
+      address1,
+      address2,
+      appointment_date,
+      appointment_time,
+      doctor_specialty,
+      doctor_id
+  } = req.body;
+
+  // ✅ SQL Query to Insert Data
+  const sql = `
+      INSERT INTO patients_details (first_name, last_name, dob, age, gender, email, phone_number, address1, address2, appointment_date, appointment_time, doctor_specialty, doctor_id) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `;
+
+  // ✅ Execute SQL Query
+  db.query(sql, [first_name, last_name, dob, age, gender, email, phone_number, address1, address2, appointment_date, appointment_time, doctor_specialty, doctor_id], 
+  (err, result) => {
+      if (err) {
+          console.error("Error inserting appointment:", err);
+          return res.status(500).json({ message: "Database error", error: err });
+      }
+      res.status(200).json({ message: "Appointment booked successfully!", result });
+  });
+});
 
 
 module.exports = router;
