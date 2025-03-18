@@ -670,6 +670,15 @@ window.addEventListener("beforeunload", function () {
     }
 });
 
+//page refresh
+document.addEventListener("DOMContentLoaded", function () {
+    // Clear localStorage to erase saved form data
+    localStorage.clear();
+
+    // Reset all form fields
+    document.getElementById("DoctorsAppointments").reset();
+});
+
 
 </script>
   

@@ -315,29 +315,27 @@ doctor_id
 
 //For storing doctors absentese
 exports.submitAttendance = (req, res) => {
-  console.log("Received Attendance Data:", req.body); // Debugging
+  console.log("✅ Received Attendance Data:", req.body);
 
-  const { doctor_id, doctor_name, leave_date, timing_from, timing_to } = req.body;
+  let { doctor_id, doctor_name, leave_date } = req.body;
 
-  // Check if any required field is missing
-  if (!doctor_id || !doctor_name || !leave_date || !timing_from || !timing_to) {
-      return res.status(400).json({ message: "All fields are required!" });
-  }
+  // Insert into database
+  const sql = `INSERT INTO DoctorAttendance (doctor_id, doctor_name, leave_date) 
+               VALUES (?, ?, ?)`;
 
-  const sql = `INSERT INTO DoctorAttendance (doctor_id, doctor_name, leave_date, timing_from, timing_to) 
-               VALUES (?, ?, ?, ?, ?)`;
-
-  const values = [doctor_id, doctor_name, leave_date, timing_from, timing_to];
+  const values = [doctor_id, doctor_name, leave_date];
 
   db.query(sql, values, (err, result) => {
       if (err) {
-          console.error("Error inserting attendance record:", err);
-          res.status(500).json({ message: "Error submitting attendance", error: err });
-      } else {
-          res.status(200).json({ message: "Attendance submitted successfully!" });
+          console.error("❌ Error inserting attendance record:", err);
+          return res.status(500).json({ message: "Error submitting attendance", error: err });
       }
+      console.log("✅ Attendance stored successfully!");
+      res.status(200).json({ message: "Attendance submitted successfully!" });
   });
 };
+
+
 
 
 
