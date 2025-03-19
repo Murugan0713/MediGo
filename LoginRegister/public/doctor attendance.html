@@ -109,25 +109,29 @@
         </div>
       </nav>
 
-<div class="doctor">
-    <h1>Doctor's Attendance</h1>
-    <hr>
-    <form id="attendanceForm" action="/auth/submitAttendance" method="POST">
-        <label for="doctor-id">Doctor's ID:</label>
-        <input type="text" id="doctor_id" name="doctor_id" placeholder="Enter your Id here" required>
-        <span class="error-message" id="id-error">Invalid Doctor's ID</span>
-
-        <label for="Doctor-name">Doctor's Name:</label>
-        <input type="text" name="doctor_name" placeholder="Enter your name" required>
-
-        <label for="Leave-date">Leave Date:</label>
-        <input type="date" name="leave_date" required>
-
-        <div class="submit">
-            <button type="submit">Submit</button>
-        </div>
-    </form>
-</div>
+      <div class="doctor">
+        <h1>Doctor's Attendance</h1>
+        <hr>
+        <form id="attendanceForm" action="/auth/submitAttendance" method="POST">
+            <label for="doctor-id">Doctor's ID:</label>
+            <input type="text" id="doctor_id" name="doctor_id" placeholder="Enter Doctor's ID" required>
+            <span class="error-message" id="id-error">Invalid Doctor's ID</span>
+    
+            <label for="Doctor-name">Doctor's Name:</label>
+            <input type="text" id="doctor_name" name="doctor_name" readonly>
+    
+            <label for="Doctor-specialty">Doctor's Specialty:</label>
+            <input type="text" id="doctor_specialty" name="doctor_specialty" readonly>
+    
+            <label for="Leave-date">Leave Date:</label>
+            <input type="date" id="leave_date" name="leave_date" required>
+    
+            <div class="submit">
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+    
 
 <div class="footer-container">
     <footer class="py-3">
@@ -141,159 +145,85 @@
   
 
   <script>
-document.addEventListener("DOMContentLoaded", function () {
-    const doctorIdInput = document.getElementById("doctor_id");
-    const doctorNameInput = document.querySelector("input[name='doctor_name']");
-    const leaveDateInput = document.querySelector("input[name='leave_date']");
-    const doctorIdError = document.getElementById("id-error");
-    const submitButton = document.querySelector("button[type='submit']");
-    const form = document.getElementById("attendanceForm");
-
-    let isDoctorIdValid = false; // Track Doctor ID validity
-
-    // ✅ Doctor ID Validation (Check in database)
-    doctorIdInput.addEventListener("blur", function () {
-    const doctorId = doctorIdInput.value.trim();
-
-    if (doctorId) {
-        fetch(`/auth/checkDoctorId/${doctorId}`)
-            .then(response => {
-                if (!response.ok) throw new Error("Server error"); // Only catch actual errors
-                return response.json();
-            })
-            .then(data => {
-                if (data.exists) {  
-                    isDoctorIdValid = true;
-                    doctorIdError.style.display = "none";  // Hide error message
-                } else {
-                    isDoctorIdValid = false;
-                    doctorIdError.innerText = "❌ Doctor ID does not exist!";
-                    doctorIdError.style.display = "block";
-                    alert("❌ Doctor ID does not exist!"); // Alert only for invalid ID
-                }
-                validateForm();
-            })
-            .catch(err => {
-                console.error("Error checking doctor ID:", err);
-                if (err.message === "Server error") {
-                    alert("⚠️ Unable to verify Doctor ID!"); // Only show for real server failures
-                }
-                doctorIdError.innerText = "⚠️ Error verifying Doctor ID!";
-                doctorIdError.style.display = "block";
-                isDoctorIdValid = false;
-                validateForm();
-            });
-    } else {
-        isDoctorIdValid = false;
-        doctorIdError.innerText = "⚠️ Doctor ID is required!";
-        doctorIdError.style.display = "block";
-        validateForm();
-    }
-});
-
-
-    // ✅ Validate Form Only After User Has Typed Something
-    function validateForm(showAlerts = false) {
-        let isValid = true;
-        let errors = []; // To store error messages
-
-        // Remove old error messages
-        document.querySelectorAll(".error-message").forEach(el => el.remove());
-
-        // ✅ Doctor Name Validation (Only validate if user interacted)
-        if (doctorNameInput.value.trim() === "" && doctorNameInput.getAttribute("data-touched")) {
-            isValid = false;
-            errors.push("❌ Doctor name is required!");
-            showError(doctorNameInput, "❌ Doctor name is required!");
-        }
-
-        // ✅ Leave Date Validation (Must be today or in the future)
-        const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
-        if (leaveDateInput.value && leaveDateInput.value < today) {
-            isValid = false;
-            errors.push("❌ Leave date must be today or a future date!");
-            showError(leaveDateInput, "❌ Leave date must be today or a future date!");
-        }
-
-
-        // ✅ Show Alert if Any Errors Exist (only when user submits)
-        if (showAlerts && errors.length > 0) {
-            alert(errors.join("\n")); // Show all errors in one alert
-        }
-
-        // ✅ Disable submit button if form is invalid
-        submitButton.disabled = !isDoctorIdValid || !isValid;
-    }
-
-    // ✅ Show Error Messages Below Inputs
-    function showError(inputElement, message) {
-        const error = document.createElement("span");
-        error.classList.add("error-message");
-        error.style.color = "red";
-        error.innerText = message;
-        inputElement.after(error);
-    }
-
-    // ✅ Mark Inputs as Touched When User Types
-    document.querySelectorAll("input").forEach(input => {
-        input.addEventListener("input", function () {
-            this.setAttribute("data-touched", "true"); // Mark as touched
-            validateForm();
-        });
-
-        input.addEventListener("blur", function () {
-            this.setAttribute("data-touched", "true"); // Ensure it's marked touched
-            validateForm();
-        });
-    });
-
-    // ✅ Prevent Form Submission if Validation Fails
-    form.addEventListener("submit", function (event) {
-        event.preventDefault(); // Prevent default form submission
-
-        // Gather form data
-        const formData = {
-            doctor_id: document.getElementById("doctor_id").value.trim(),
-            doctor_name: document.querySelector("input[name='doctor_name']").value.trim(),
-            leave_date: document.querySelector("input[name='leave_date']").value
-        };
-
-        // ✅ Debugging: Log data before sending
-        console.log("Submitting Attendance Data:", formData);
-
-        // Send data to backend
-        fetch("/auth/submitAttendance", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(formData)
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log("Server Response:", data); // ✅ Debugging Response
-            if (data.message === "Attendance submitted successfully!") {
-                alert("✅ Attendance submitted successfully!");
-                window.location.reload();
+    document.addEventListener("DOMContentLoaded", function () {
+        const doctorIdInput = document.getElementById("doctor_id");
+        const doctorNameInput = document.getElementById("doctor_name");
+        const doctorSpecialtyInput = document.getElementById("doctor_specialty");
+        const doctorIdError = document.getElementById("id-error");
+        const leaveDateInput = document.getElementById("leave_date");
+        const form = document.getElementById("attendanceForm");
+    
+        let timeout = null; // ✅ Use debounce to avoid excessive API calls
+    
+        // ✅ Fetch doctor details instantly as the user types
+        doctorIdInput.addEventListener("input", function () {
+            clearTimeout(timeout); // Clear previous timeout
+            const doctorId = doctorIdInput.value.trim();
+    
+            if (doctorId.length >= 3) { // ✅ Fetch only when 3+ characters are entered
+                timeout = setTimeout(() => {
+                    fetch(`/auth/getDoctorDetails/${doctorId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.exists) {
+                                doctorIdError.style.display = "none";
+                                doctorNameInput.value = data.doctor_name;
+                                doctorSpecialtyInput.value = data.doctor_specialty;
+                            } else {
+                                doctorIdError.innerText = "❌ Doctor ID not found!";
+                                doctorIdError.style.display = "block";
+                                doctorNameInput.value = "";
+                                doctorSpecialtyInput.value = "";
+                            }
+                        })
+                        .catch(err => {
+                            console.error("Error fetching doctor details:", err);
+                            doctorIdError.innerText = "⚠️ Error verifying Doctor ID!";
+                            doctorIdError.style.display = "block";
+                            doctorNameInput.value = "";
+                            doctorSpecialtyInput.value = "";
+                        });
+                }, 500); // ✅ Add a small delay to optimize API requests
             } else {
-                alert("❌ Error: " + data.message);
+                doctorNameInput.value = "";
+                doctorSpecialtyInput.value = "";
             }
-        })
-        .catch(error => {
-            console.error("Error:", error);
-            alert("⚠️ An error occurred. Please try again.");
+        });
+    
+        form.addEventListener("submit", function (event) {
+            event.preventDefault();
+    
+            const formData = {
+                doctor_id: doctorIdInput.value.trim(),
+                doctor_name: doctorNameInput.value.trim(),
+                doctor_specialty: doctorSpecialtyInput.value.trim(),
+                leave_date: leaveDateInput.value.trim()
+            };
+    
+            console.log("Submitting Attendance Data:", formData);
+    
+            fetch("/auth/submitAttendance", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message === "Attendance submitted successfully!") {
+                    alert("✅ Attendance submitted successfully!");
+                    window.location.reload();
+                } else {
+                    alert("❌ Error: " + data.message);
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("⚠️ An error occurred. Please try again.");
+            });
         });
     });
-});
-
-//below script for showing or hiding timing from and to
-document.addEventListener("DOMContentLoaded", function () {
-    const timingFields = document.getElementById("timingFields");
-
-    // ✅ Make the timing fields visible by default
-    timingFields.style.display = "block";
-});
-
-
-  
-</script>
+    </script>
+    
+    
 </body>
 </html>

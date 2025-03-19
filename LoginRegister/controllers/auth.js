@@ -317,13 +317,13 @@ doctor_id
 exports.submitAttendance = (req, res) => {
   console.log("✅ Received Attendance Data:", req.body);
 
-  let { doctor_id, doctor_name, leave_date } = req.body;
+  let { doctor_id, doctor_name, doctor_specialty, leave_date } = req.body;
 
   // Insert into database
-  const sql = `INSERT INTO DoctorAttendance (doctor_id, doctor_name, leave_date) 
-               VALUES (?, ?, ?)`;
+  const sql = `INSERT INTO DoctorAttendance (doctor_id, doctor_name, doctor_specialty, leave_date) 
+               VALUES (?, ?, ?, ?)`;
 
-  const values = [doctor_id, doctor_name, leave_date];
+  const values = [doctor_id, doctor_name, doctor_specialty, leave_date];
 
   db.query(sql, values, (err, result) => {
       if (err) {
@@ -334,8 +334,6 @@ exports.submitAttendance = (req, res) => {
       res.status(200).json({ message: "Attendance submitted successfully!" });
   });
 };
-
-
 
 
 

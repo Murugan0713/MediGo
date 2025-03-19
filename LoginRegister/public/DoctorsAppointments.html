@@ -635,31 +635,37 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-
-
-
 document.addEventListener("DOMContentLoaded", function () {
-    const storedData = JSON.parse(localStorage.getItem("appointmentFormData"));
-    const selectedDoctorId = localStorage.getItem("selectedDoctorId");
-    const selectedAppointmentTime = localStorage.getItem("selectedAppointmentTime");
+    // Detect if the page was manually refreshed
+    if (performance.getEntriesByType("navigation")[0].type === "reload") {
+        console.log("Page was manually refreshed. Clearing form data...");
+        localStorage.clear();
+        document.getElementById("DoctorsAppointments").reset();
+    } else {
+        // ✅ Load stored data if the page is accessed normally (e.g., returning from ChooseDoctors.html)
+        const storedData = JSON.parse(localStorage.getItem("appointmentFormData"));
+        const selectedDoctorId = localStorage.getItem("selectedDoctorId");
+        const selectedAppointmentTime = localStorage.getItem("selectedAppointmentTime");
 
-    if (storedData) {
-        document.getElementById("first_name").value = storedData.first_name || "";
-        document.getElementById("last_name").value = storedData.last_name || "";
-        document.getElementById("dob").value = storedData.dob || "";
-        document.getElementById("age").value = storedData.age || "";
-        document.querySelector("select[name='gender']").value = storedData.gender || "";
-        document.getElementById("email").value = storedData.email || "";
-        document.querySelector("input[name='phone_number']").value = storedData.phone_number || "";
-        document.querySelector("input[name='address1']").value = storedData.address1 || "";
-        document.querySelector("input[name='address2']").value = storedData.address2 || "";
-        document.getElementById("appointmentDate").value = storedData.appointment_date || "";
-        document.getElementById("doctor-specialty").value = storedData.doctor_specialty || "";
+        if (storedData) {
+            document.getElementById("first_name").value = storedData.first_name || "";
+            document.getElementById("last_name").value = storedData.last_name || "";
+            document.getElementById("dob").value = storedData.dob || "";
+            document.getElementById("age").value = storedData.age || "";
+            document.querySelector("select[name='gender']").value = storedData.gender || "";
+            document.getElementById("email").value = storedData.email || "";
+            document.querySelector("input[name='phone_number']").value = storedData.phone_number || "";
+            document.querySelector("input[name='address1']").value = storedData.address1 || "";
+            document.querySelector("input[name='address2']").value = storedData.address2 || "";
+            document.getElementById("appointmentDate").value = storedData.appointment_date || "";
+            document.getElementById("doctor-specialty").value = storedData.doctor_specialty || "";
+        }
+
+        if (selectedDoctorId) document.getElementById("doctorId").value = selectedDoctorId;
+        if (selectedAppointmentTime) document.getElementById("appointmentTime").value = selectedAppointmentTime;
     }
-
-    if (selectedDoctorId) document.getElementById("doctorId").value = selectedDoctorId;
-    if (selectedAppointmentTime) document.getElementById("appointmentTime").value = selectedAppointmentTime;
 });
+
 
 window.addEventListener("beforeunload", function () {
     if (window.location.pathname == "/ChooseDoctors.html") {
@@ -672,11 +678,9 @@ window.addEventListener("beforeunload", function () {
 
 //page refresh
 document.addEventListener("DOMContentLoaded", function () {
-    // Clear localStorage to erase saved form data
-    localStorage.clear();
-
-    // Reset all form fields
-    document.getElementById("DoctorsAppointments").reset();
+    if (!localStorage.getItem("appointmentFormData")) {
+        document.getElementById("DoctorsAppointments").reset();
+    }
 });
 
 

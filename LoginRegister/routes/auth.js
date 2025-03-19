@@ -245,55 +245,52 @@ router.post("/DoctorsAppointments", (req, res) => {
 router.get("/getDoctorsBySpecialty/:specialty/:date", (req, res) => {
     const { specialty, date } = req.params;
 
-    // ✅ Step 1: Get all doctors with the given specialty
-    const sqlDoctors = `
-        SELECT * FROM doctorsdetails 
-        WHERE doctor_specialty = ?
-    `;
+    // ✅ Step 1: Get all doctors who are NOT on leave for the selected date
+    const sql = `
+        SELECT d.doctor_id, d.first_name, d.last_name, d.email, d.doctor_specialty, d.image_path
+        FROM DoctorsDetails d
+        WHERE d.doctor_specialty = ? 
+        AND d.doctor_id NOT IN (
+            SELECT doctor_id FROM doctorattendance WHERE leave_date = ?
+        )`;
 
-    db.query(sqlDoctors, [specialty], (err, doctors) => {
+    db.query(sql, [specialty, date], (err, doctors) => {
         if (err) {
-            console.error("Error fetching doctors:", err);
+            console.error("❌ Error fetching available doctors:", err);
             return res.status(500).json({ message: "Database error", error: err });
         }
 
-        if (doctors.length === 0) {
-            return res.status(404).json({ message: "No doctors found for this specialty" });
-        }
-
-        // ✅ Step 2: Get doctors' attendance for the selected date
-        const doctorIds = doctors.map(d => d.doctor_id);
-        const sqlAttendance = `
-            SELECT doctor_id, 
-            FROM DoctorAttendance
-            WHERE doctor_id IN (?) AND attendance_date = ?
-        `;
-
-        db.query(sqlAttendance, [doctorIds, date], (err, attendanceRecords) => {
-            if (err) {
-                console.error("Error fetching attendance:", err);
-                return res.status(500).json({ message: "Database error", error: err });
-            }
-
-            // ✅ Step 3: Process Attendance Data
-            let updatedDoctors = doctors.filter(doctor => {
-                let attendance = attendanceRecords.find(a => a.doctor_id === doctor.doctor_id);
-                
-                if (!attendance) return true; // ✅ No attendance record = Assume Available
-                if (attendance.status === "Absent") return false; // ❌ Remove absent doctors
-
-                // ✅ Adjust time slots if doctor is late
-                if (attendance.status === "Late" && attendance.late_from && attendance.late_to) {
-                    doctor.late_from = attendance.late_from;
-                    doctor.late_to = attendance.late_to;
-                }
-                return true;
-            });
-
-            res.status(200).json(updatedDoctors);
-        });
+        console.log("✅ Available Doctors:", doctors);
+        res.status(200).json(doctors);
     });
 });
+
+
+//for get doctors details for doctore attendance
+router.get('/getDoctorDetails/:id', (req, res) => {
+    const doctorId = req.params.id;
+    
+    const sql = "SELECT first_name, last_name, doctor_specialty FROM DoctorsDetails WHERE doctor_id = ?";
+    
+    db.query(sql, [doctorId], (err, results) => {
+        if (err) {
+            console.error("Error fetching doctor details:", err);
+            return res.status(500).json({ message: "Database error", error: err });
+        }
+
+        if (results.length > 0) {
+            const doctor = results[0];
+            res.status(200).json({ 
+                exists: true, 
+                doctor_name: `${doctor.first_name} ${doctor.last_name}`, 
+                doctor_specialty: doctor.doctor_specialty 
+            });
+        } else {
+            res.status(404).json({ exists: false, message: "Doctor not found" });
+        }
+    });
+});
+
 
 
 module.exports = router;

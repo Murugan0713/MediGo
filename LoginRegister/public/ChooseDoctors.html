@@ -88,26 +88,31 @@
       <p class="text-center" style="color: black;">© 2024 Company, Inc</p>
     </footer>
   </div>
-
-  <script>
- document.addEventListener("DOMContentLoaded", function () {
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
     const doctorsContainer = document.getElementById("doctorsContainer");
     let doctorSpecialty = localStorage.getItem("selectedSpecialty");
+    let appointmentDate = localStorage.getItem("appointmentFormData") 
+        ? JSON.parse(localStorage.getItem("appointmentFormData")).appointment_date 
+        : null;
 
-    console.log("Loaded specialty from storage:", doctorSpecialty);
+    console.log("✅ Selected Specialty:", doctorSpecialty);
+    console.log("✅ Selected Appointment Date:", appointmentDate);
 
-    if (!doctorSpecialty) {
-        alert("No specialty selected. Redirecting...");
+    if (!doctorSpecialty || !appointmentDate) {
+        alert("No specialty or appointment date selected. Redirecting...");
         return window.location.href = "DoctorsAppointments.html";
     }
 
-    fetch(`http://localhost:3005/auth/getDoctorsBySpecialty/${encodeURIComponent(doctorSpecialty)}`)
+    // ✅ Fetch available doctors for the selected date & specialty
+    fetch(`http://localhost:3005/auth/getDoctorsBySpecialty/${encodeURIComponent(doctorSpecialty)}/${appointmentDate}`)
         .then(response => response.json())
         .then(doctors => {
+            console.log("✅ Doctors received from backend:", doctors);
             doctorsContainer.innerHTML = ""; // Clear previous content
 
             if (!Array.isArray(doctors) || doctors.length === 0) {
-                doctorsContainer.innerHTML = "<p>No doctors available for this specialty.</p>";
+                doctorsContainer.innerHTML = "<p>No available doctors for this specialty on the selected date.</p>";
                 return;
             }
 
@@ -118,9 +123,12 @@
                       <img src="/uploads/${doctor.image_path}" class="card-img-top" alt="${doctor.first_name}" style="height: 200px; object-fit: cover;">
                       <div class="card-body">
                         <h5 class="card-title">${doctor.first_name} ${doctor.last_name}</h5>
+                        <p class="card-text"><strong>Doctor ID:</strong> ${doctor.doctor_id}</p>
                         <p class="card-text"><strong>Specialty:</strong> ${doctor.doctor_specialty}</p>
                         <p class="card-text"><strong>Email:</strong> ${doctor.email}</p>
-                        <label for="appointment-time-${doctor.doctor_id}">Choose Appointment Time:</label>
+
+                        <!-- ✅ Choose Appointment Time Dropdown -->
+                        <label for="appointment-time-${doctor.doctor_id}"><strong>Choose Timing:</strong></label>
                         <select class="form-control mb-2" id="appointment-time-${doctor.doctor_id}">
                             <option value="">Select Time</option>
                             <option value="9 AM - 10 AM">9 AM - 10 AM</option>
@@ -132,6 +140,7 @@
                             <option value="4 PM - 5 PM">4 PM - 5 PM</option>
                             <option value="5 PM - 6 PM">5 PM - 6 PM</option>
                         </select>
+
                         <button class="btn btn-primary select-doctor" data-id="${doctor.doctor_id}">
                           Select Doctor
                         </button>
@@ -142,6 +151,7 @@
                 doctorsContainer.innerHTML += doctorCard;
             });
 
+            // ✅ Handle Doctor Selection
             document.querySelectorAll(".select-doctor").forEach(button => {
                 button.addEventListener("click", function () {
                     const doctorId = this.getAttribute("data-id");
@@ -152,7 +162,7 @@
                         return;
                     }
 
-                    // ✅ Store doctor ID and appointment time
+                    // ✅ Store selected doctor & appointment time
                     localStorage.setItem("selectedDoctorId", doctorId);
                     localStorage.setItem("selectedAppointmentTime", appointmentTime);
 
@@ -162,15 +172,13 @@
             });
         })
         .catch(error => {
-            console.error("Error fetching doctors:", error);
-            doctorsContainer.innerHTML = "<p>Error loading doctors. Try again later.</p>";
+            console.error("❌ Error fetching doctors:", error);
+            doctorsContainer.innerHTML = "<p>❌ Error loading doctors. Try again later.</p>";
         });
 });
 
 
-
-
-  </script>
+</script>
   
   
 
