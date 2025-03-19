@@ -10,6 +10,7 @@ const cors = require("cors");
 
 router.use(cors());
 
+
 // Setup multer for image uploads
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -109,37 +110,34 @@ router.get('/checkDoctorId/:id', (req, res) => {
   
 
 // ✅ Doctor Login Route (Fix Applied)
-router.post('/DoctorLogin', (req, res) => {
-  const { doctor_id, password } = req.body; // Ensure `doctor_id` is extracted properly
+router.post("/DoctorLogin", (req, res) => {
+    const { doctor_id, password } = req.body;
 
-  if (!doctor_id || !password) {
-      return res.status(400).json({ message: "Please enter both Doctor ID and password." });
-  }
+    if (!doctor_id || !password) {
+        return res.status(400).json({ message: "Please enter both Doctor ID and password." });
+    }
 
-  const sql = "SELECT * FROM DoctorsDetails WHERE doctor_id = ?";
-  db.query(sql, [doctor_id], (err, results) => {
-      if (err) {
-          console.error("Error fetching doctor data:", err);
-          return res.status(500).json({ message: "Internal Server Error" });
-      }
+    const sql = "SELECT * FROM DoctorsDetails WHERE doctor_id = ?";
+    db.query(sql, [doctor_id], (err, results) => {
+        if (err) {
+            console.error("❌ Error fetching doctor data:", err);
+            return res.status(500).json({ message: "Internal Server Error" });
+        }
 
-      if (results.length === 0) {
-          return res.status(401).json({ message: "Invalid Doctor ID or Password" });
-      }
+        if (results.length === 0) {
+            return res.status(401).json({ message: "Invalid Doctor ID or Password" });
+        }
 
-      const doctor = results[0];
+        const doctor = results[0];
 
-      // ✅ Check if session exists before setting `doctor_id`
-      if (!req.session) {
-          return res.status(500).json({ message: "Session is not available" });
-      }
+        // ✅ Store Doctor ID in session correctly
+        req.session.doctor_id = doctor.doctor_id;
+        console.log("✅ Session Set for Doctor:", req.session.doctor_id);
 
-      // ✅ Store Doctor ID in session correctly
-      req.session.doctor_id = doctor.doctor_id;
-
-      res.status(200).json({ message: "Login successful!", redirect: "/DoctorsDashboard.html" });
-  });
+        res.status(200).json({ message: "Login successful!", redirect: "/DoctorsDashboard.html" });
+    });
 });
+
 
 router.post("/contactAdmin", (req, res) => {
   const { doctor_id, doctor_email, subject, message } = req.body;
@@ -265,7 +263,6 @@ router.get("/getDoctorsBySpecialty/:specialty/:date", (req, res) => {
     });
 });
 
-
 //for get doctors details for doctore attendance
 router.get('/getDoctorDetails/:id', (req, res) => {
     const doctorId = req.params.id;
@@ -291,6 +288,144 @@ router.get('/getDoctorDetails/:id', (req, res) => {
     });
 });
 
+//get login user email-id
+router.get("/getLoggedInUser", (req, res) => {
+    if (req.session && req.session.user_email) {
+        res.json({ email: req.session.user_email });
+    } else {
+        res.status(401).json({ message: "User not logged in" });
+    }
+});
+
+//to show appointment details to the patient
+router.get("/getUserAppointments", (req, res) => {
+    const userEmail = req.session.user_email;
+
+    if (!userEmail) {
+        return res.status(401).json({ message: "User not logged in" });
+    }
+
+    const sql = "SELECT * FROM patients_details WHERE email = ? ORDER BY appointment_date DESC";
+    db.query(sql, [userEmail], (err, results) => {
+        if (err) {
+            console.error("Error fetching user appointments:", err);
+            return res.status(500).json({ message: "Database error" });
+        }
+        res.status(200).json(results);
+    });
+});
+
+
+//to show appointmetnt details in doctors side
+router.get("/getDoctorAppointments", (req, res) => {
+    const doctorId = req.session.doctor_id;
+
+    if (!doctorId) {
+        return res.status(401).json({ message: "Doctor not logged in" });
+    }
+
+    const sql = "SELECT * FROM patients_details WHERE doctor_id = ? AND status = 'pending' ORDER BY appointment_date ASC";
+    db.query(sql, [doctorId], (err, results) => {
+        if (err) {
+            console.error("Error fetching doctor appointments:", err);
+            return res.status(500).json({ message: "Database error" });
+        }
+        res.status(200).json(results);
+    });
+});
+
+// for appointment status
+router.post("/updateAppointmentStatus", (req, res) => {
+    const { appointmentId, status } = req.body;
+
+    if (!appointmentId || !["accepted", "declined"].includes(status)) {
+        return res.status(400).json({ message: "Invalid request" });
+    }
+
+    const sql = "UPDATE patients_details SET status = ? WHERE id = ?";
+    db.query(sql, [status, appointmentId], (err, result) => {
+        if (err) {
+            console.error("Error updating appointment status:", err);
+            return res.status(500).json({ message: "Database error" });
+        }
+        res.status(200).json({ message: `Appointment ${status} successfully` });
+    });
+});
+
+
+//for booked appointments for doctors
+router.post("/bookAppointment", (req, res) => {
+    const {
+        first_name,
+        last_name,
+        dob,
+        age,
+        gender,
+        email,
+        phone_number,
+        address1,
+        address2,
+        appointment_date,
+        appointment_time,
+        doctor_specialty,
+        doctor_id
+    } = req.body;
+
+    const sql = `
+        INSERT INTO patients_details 
+        (first_name, last_name, dob, age, gender, email, phone_number, address1, address2, appointment_date, appointment_time, doctor_specialty, doctor_id) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
+    db.query(sql, [first_name, last_name, dob, age, gender, email, phone_number, address1, address2, appointment_date, appointment_time, doctor_specialty, doctor_id], 
+    (err, result) => {
+        if (err) {
+            console.error("Error booking appointment:", err);
+            return res.status(500).json({ message: "Database error", error: err });
+        }
+        res.status(200).json({ message: "Appointment booked successfully!", appointmentId: result.insertId });
+    });
+});
+
+
+router.get("/getBookedAppointments", (req, res) => {
+    const doctorId = req.session.doctor_id;
+    console.log("🔵 Fetching booked appointments for doctor ID:", doctorId);
+
+    if (!doctorId) {
+        console.log("❌ No doctor ID found in session");
+        return res.status(401).json({ message: "Doctor not logged in" });
+    }
+
+    const sql = "SELECT * FROM patients_details WHERE doctor_id = ? AND status = 'accepted'";
+    db.query(sql, [doctorId], (err, results) => {
+        if (err) {
+            console.error("❌ Error fetching booked appointments:", err);
+            return res.status(500).json({ message: "Database error" });
+        }
+
+        console.log("✅ Booked Appointments Response:", results);  // ✅ Debugging Log
+        res.status(200).json(results);
+    });
+});
+
+
+//for canceled appointments to the doctors
+router.post("/cancelAppointment", (req, res) => {
+    const { appointmentId } = req.body;
+
+    if (!appointmentId) {
+        return res.status(400).json({ message: "Invalid request" });
+    }
+
+    const sql = "UPDATE patients_details SET status = 'cancelled' WHERE id = ?";
+    db.query(sql, [appointmentId], (err, result) => {
+        if (err) {
+            console.error("Error cancelling appointment:", err);
+            return res.status(500).json({ message: "Database error" });
+        }
+        res.status(200).json({ message: "Appointment cancelled successfully" });
+    });
+});
 
 
 module.exports = router;

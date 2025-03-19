@@ -239,7 +239,7 @@
     </div>
     <div class="email">
         <label for="">E-mail:</label>
-        <input type="text" id="email" placeholder="example@gmail.com" name="email" required>
+        <input type="text" id="email" name="email" readonly>
         <div class="error" id="emailError"></div>
     </div>
     <div class="phone-no">
@@ -681,6 +681,37 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!localStorage.getItem("appointmentFormData")) {
         document.getElementById("DoctorsAppointments").reset();
     }
+});
+//using session to store emial-id automaticaly
+document.addEventListener("DOMContentLoaded", function () {
+    fetch("http://localhost:3005/auth/getLoggedInUser")
+        .then(response => response.json())
+        .then(data => {
+            if (data.email) {
+                document.getElementById("email").value = data.email;
+            } else {
+                alert("Please log in to proceed.");
+                window.location.href = "login.html";
+            }
+        })
+        .catch(error => {
+            console.error("Error fetching logged-in user email:", error);
+        });
+});
+// for storing email-id automaticaly from session
+document.addEventListener("DOMContentLoaded", function () {
+    fetch("http://localhost:3005/auth/getLoggedInUser")
+        .then(response => response.json())
+        .then(data => {
+            if (data.email) {
+                document.getElementById("email").value = data.email;
+            } else {
+                window.location.href = "login.html"; // Redirect to login if not logged in
+            }
+        })
+        .catch(error => {
+            console.error("Error fetching logged-in user email:", error);
+        });
 });
 
 

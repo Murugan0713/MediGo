@@ -55,49 +55,45 @@ exports.register = (req, res) => {
   );
 };
 
+// Modify login function to store email in session
 exports.login = (req, res) => {
-  console.log(req.body);
   const { email, pass1 } = req.body;
 
   if (!email || !pass1) {
-    return res
-      .status(400)
-      .json({ message: "Please enter both email and password." });
+      return res.status(400).json({ message: "Please enter both email and password." });
   }
 
-  // Check if user exists in the database
   const sql = "SELECT * FROM register WHERE email = ?";
   db.query(sql, [email], (err, results) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ message: "Internal Server Error" });
-    }
-
-    if (results.length === 0) {
-      return res
-        .status(401)
-        .json({ message: "Email Id or password are invalid" });
-    }
-
-    // Compare the entered password with the stored hashed password
-    const user = results[0];
-    bcrypt.compare(pass1, user.pass1, (err, isMatch) => {
       if (err) {
-        console.error(err);
-        return res.status(500).json({ message: "Internal Server Error" });
+          console.error(err);
+          return res.status(500).json({ message: "Internal Server Error" });
       }
 
-      if (!isMatch) {
-        return res
-          .status(401)
-          .json({ message: "Email Id or password are invalid" });
+      if (results.length === 0) {
+          return res.status(401).json({ message: "Email ID or password is invalid" });
       }
 
-      // Redirect to home page on successful login
-      res.redirect("/MediGo");
-    });
+      const user = results[0];
+      bcrypt.compare(pass1, user.pass1, (err, isMatch) => {
+          if (err) {
+              console.error(err);
+              return res.status(500).json({ message: "Internal Server Error" });
+          }
+
+          if (!isMatch) {
+              return res.status(401).json({ message: "Email ID or password is invalid" });
+          }
+
+          // ✅ Store user email in session
+          req.session.user_email = user.email;
+          console.log("✅ Session Set:", req.session.user_email); // ✅ Debug session storage
+
+          res.redirect("/MediGo.html"); // Redirect user after successful login
+      });
   });
 };
+
 exports.Adminlogin = (req, res) => {
   console.log(req.body);
   const { AdminId, Password } = req.body;

@@ -77,9 +77,7 @@
         </div>
       </nav>
       <div class="container">
-        <div class="row" id="doctor-container">
-          <!-- Cards will be appended here -->
-        </div>
+        <div id="doctor-appointments-container"></div>
       </div>
       <div class="footer-container">
         <footer class="py-3">
@@ -93,5 +91,45 @@
           <p class="text-center" style="color: black;">© 2024 Company, Inc</p>
         </footer>
       </div>
+      <script>
+        function updateStatus(id, status) {
+            fetch("/auth/updateAppointmentStatus", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ appointmentId: id, status })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(`Appointment ${id} updated to ${status}:`, data);
+                location.reload(); // ✅ Refresh the page to reflect changes
+            })
+            .catch(error => console.error("Error updating appointment:", error));
+        }
+      
+        document.addEventListener("DOMContentLoaded", function () {
+            fetch("/auth/getDoctorAppointments")
+                .then(response => response.json())
+                .then(appointments => {
+                    const container = document.getElementById("doctor-appointments-container");
+                    container.innerHTML = "";
+      
+                    appointments.forEach(appt => {
+                        const card = `
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Patient: ${appt.first_name} ${appt.last_name}</h5>
+                                    <p>Date: ${appt.appointment_date}</p>
+                                    <p>Status: <strong>${appt.status}</strong></p>
+                                    <button onclick="updateStatus(${appt.id}, 'accepted')">Accept</button>
+                                    <button onclick="updateStatus(${appt.id}, 'declined')">Decline</button>
+                                </div>
+                            </div>`;
+                        container.innerHTML += card;
+                    });
+                })
+                .catch(error => console.error("Error loading appointments:", error));
+        });
+      </script>
+      
 </body>
 </html>
