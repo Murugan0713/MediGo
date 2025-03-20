@@ -258,7 +258,6 @@ exports.getDoctorById = (req, res) => {
 exports.updateDoctor = async (req, res) => {
   const doctor_id = req.params.id;
   const {
-      doctor_id: new_doctor_id,
       doctor_password,
       first_name,
       last_name,
@@ -273,41 +272,68 @@ exports.updateDoctor = async (req, res) => {
   } = req.body;
 
   try {
-    let plainPassword = doctor_password || oldPassword;  // Keep old password if not changed
+      let hashedPassword;
 
-    const sql = `UPDATE DoctorsDetails 
-    SET doctor_id=?, doctor_password=?, first_name=?, last_name=?, date_of_birth=?, 
-        age=?, gender=?, email=?, phone_number=?, permanent_address=?, current_address=?, doctor_specialty=? 
-    WHERE doctor_id=?`;
+      if (doctor_password) {
+          // ✅ Hash the new password
+          hashedPassword = await bcrypt.hash(doctor_password, 8);
+          updateDoctorInDB();
+      } else {
+          // ✅ Keep the old password if no new one is provided
+          const getPasswordSQL = "SELECT doctor_password FROM DoctorsDetails WHERE doctor_id = ?";
+          db.query(getPasswordSQL, [doctor_id], (err, results) => {
+              if (err) {
+                  console.error("❌ Error fetching old password:", err);
+                  return res.status(500).json({ message: "Error updating doctor password" });
+              }
+              if (results.length > 0) {
+                  hashedPassword = results[0].doctor_password;  // ✅ Keep the existing password
+                  updateDoctorInDB();
+              } else {
+                  return res.status(404).json({ message: "Doctor not found" });
+              }
+          });
+      }
 
-const values = [
-new_doctor_id || doctor_id,
-plainPassword,  // ✅ Storing password as plain text
-first_name,
-last_name,
-date_of_birth,
-age,
-gender,
-email,
-phone_number,
-permanent_address,
-current_address,
-doctor_specialty,
-doctor_id
-];
+      // ✅ Function to update the doctor in DB
+      function updateDoctorInDB() {
+          const formattedDOB = date_of_birth ? new Date(date_of_birth).toISOString().split("T")[0] : null;
 
-      db.query(sql, values, (err, result) => {
-          if (err) {
-              console.error("Error updating doctor:", err);
-              return res.status(500).json({ message: "Error updating doctor" });
-          }
-          res.status(200).json({ message: "Doctor updated successfully" });
-      });
+          const sql = `UPDATE DoctorsDetails 
+                       SET doctor_password=?, first_name=?, last_name=?, date_of_birth=?, age=?, gender=?, email=?, phone_number=?, permanent_address=?, current_address=?, doctor_specialty=? 
+                       WHERE doctor_id=?`;
+
+          const values = [
+              hashedPassword,
+              first_name,
+              last_name,
+              formattedDOB,
+              age,
+              gender,
+              email,
+              phone_number,
+              permanent_address,
+              current_address,
+              doctor_specialty,
+              doctor_id
+          ];
+
+          db.query(sql, values, (err, result) => {
+            if (err) {
+                console.error("❌ Error updating doctor:", err);
+                return res.status(500).json({ message: "Error updating doctor", error: err });
+            }
+            console.log("✅ Doctor updated successfully!");
+            res.status(200).json({ message: "Doctor updated successfully!" });
+        });
+        
+      }
   } catch (err) {
-      console.error("Error hashing password:", err);
+      console.error("❌ Error updating doctor:", err);
       res.status(500).json({ message: "Internal server error" });
   }
 };
+
 
 //For storing doctors absentese
 exports.submitAttendance = (req, res) => {

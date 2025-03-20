@@ -4,6 +4,7 @@ const mysql = require ("mysql");
 const dotenv = require ('dotenv');
 const multer = require('multer');
 const session = require('express-session');
+const helmet = require("helmet");
 
 dotenv.config({path: './.env'})
 
@@ -89,3 +90,16 @@ app.use(session({
 app.listen(3005,()=>{
     console.log("server started on Port 3005");
 });
+
+
+app.use(
+    helmet({
+        contentSecurityPolicy: {
+            directives: {
+                defaultSrc: ["'self'"],
+                styleSrc: ["'self'", "https://fonts.googleapis.com"],
+                fontSrc: ["'self'", "https://fonts.gstatic.com"],
+            },
+        },
+    })
+);

@@ -293,22 +293,25 @@ if (passwordField.trim() !== "") {
 }
 
 
-    fetch(`http://localhost:3005/auth/updateDoctor/${doctorId}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(updatedDoctor)
-    }).then(response => response.json())
-    .then(result => {
-        if (result.message === "Doctor updated successfully") {
-            alert('Doctor updated successfully!');
-            window.location.href = '/Admin-DoctorsDetails.html';
-        } else {
-            alert('Failed to update doctor.');
-        }
-    })
-    .catch(err => console.error('Error updating doctor:', err));
+fetch(`http://localhost:3005/auth/updateDoctor/${doctorId}`, {
+    method: 'PUT',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(updatedDoctor)
+})
+.then(response => response.json())
+.then(result => {
+    console.log("🔍 API Response:", result); // Debugging
+    if (result.message.toLowerCase().includes("updated")) {
+        alert('Doctor updated successfully!');
+        window.location.href = '/Admin-DoctorsDetails.html';
+    } else {
+        alert('Failed to update doctor.');
+    }
+})
+.catch(err => console.error('Error updating doctor:', err));
+
 });
 
 //Toogle to see the password 

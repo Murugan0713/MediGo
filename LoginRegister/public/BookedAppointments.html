@@ -36,7 +36,7 @@
       .dropdown-item:hover {
         color: #4caf50 !important;
       }
-      .btn {
+      .btnn {
         font-weight: 600;
         background-color: white;
       }
@@ -46,6 +46,10 @@
       /*for profile*/
       .flex-shrink-0{
         margin-left:20px;
+      }
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
       }
 
       .container{
@@ -70,12 +74,15 @@
             alt="Medico-Logo"
           />
             
-              <a href="DoctorsdashBoard.html"><button class="btn btn-outline-success" type="submit">
+              <a href="DoctorsdashBoard.html"><button class="btn btn-outline-success btnn" type="submit">
                 back
               </button></a>
           </div>
         </div>
       </nav>
+      <center>
+        <h2 class="my-2">Booked Appointment Details</h2><hr>
+      </center>
       <div class="container">
         <div class="row" id="doctor-container">
           <!-- Cards will be appended here -->
@@ -124,13 +131,15 @@
       
                     appointments.forEach(appt => {
                         const card = `
-                            <div class="card">
+                            <div class="card my-3 mb-3">
                                 <div class="card-body">
                                     <h5 class="card-title">Patient: ${appt.first_name} ${appt.last_name}</h5>
-                                    <p>Date: ${appt.appointment_date}</p>
-                                    <p>Time: ${appt.appointment_time}</p>
+                                    <p><strong>Patient Email-Id:</strong> ${appt.email}</p>
+                                    <p><strong>Patient Phone No:</strong> ${appt.phone_number}</p>
+                                    <p><strong>Appintment-Date:</strong> ${appt.appointment_date}</p>
+                                    <p<strong>Appointment-Time:</strong> ${appt.appointment_time}</p>
                                     <p>Status: <strong>${appt.status}</strong></p>
-                                    <button class="btn btn-warning cancel-btn" data-id="${appt.id}">Cancel</button>
+                                    <button class="btn btn-danger cancel-btn" data-id="${appt.id}">Cancel</button>
                                 </div>
                             </div>`;
                         container.innerHTML += card;

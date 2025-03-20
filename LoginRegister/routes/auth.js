@@ -178,12 +178,13 @@ router.post("/contactAdmin", (req, res) => {
 
 // ✅ API to Get Current Logged-in Doctor's ID
 router.get("/getCurrentDoctor", (req, res) => {
-  if (req.session && req.session.doctor_id) {
-      res.json({ doctor_id: req.session.doctor_id });
-  } else {
-      res.status(401).json({ message: "Doctor not logged in" });
-  }
+    if (req.session && req.session.doctor_id) {
+        res.json({ doctor_id: req.session.doctor_id });
+    } else {
+        res.status(401).json({ message: "Doctor not logged in" });
+    }
 });
+
 
 router.get("/getDoctorsBySpecialty/:specialty", (req, res) => {
   const specialty = decodeURIComponent(req.params.specialty);
