@@ -36,7 +36,7 @@
       .dropdown-item:hover {
         color: #4caf50 !important;
       }
-      .btn {
+      .btnn {
         font-weight: 600;
         background-color: white;
       }
@@ -48,7 +48,7 @@
         margin-left:20px;
       }
 
-      .container{
+      .containner{
         min-height:30rem;
 
       }
@@ -70,14 +70,34 @@
             alt="Medico-Logo"
           />
             
-              <a href="MediGo.html"><button class="btn btn-outline-success" type="submit">
+              <a href="MediGo.html"><button class="btn btn-outline-success btnn" type="submit">
                 back
               </button></a>
           </div>
         </div>
       </nav>
-      <div class="container">
-        
+      <div class="containner">
+        <div class="container mt-5">
+          <h2 class="text-center">Edit Profile</h2>
+          <form id="editProfileForm">
+              <div class="mb-3">
+                  <label for="email" class="form-label">Email (Read-Only)</label>
+                  <input type="email" id="email" class="form-control" readonly>
+              </div>
+      
+              <div class="mb-3">
+                  <label for="uname" class="form-label">Username</label>
+                  <input type="text" id="uname" class="form-control" required>
+              </div>
+      
+              <div class="mb-3">
+                  <label for="newPassword" class="form-label">New Password (Optional)</label>
+                  <input type="password" id="newPassword" placeholder="Leave blank to keep current password" class="form-control">
+              </div>
+      
+              <button type="submit" class="btn btn-primary w-100">Update Profile</button>
+          </form>
+      </div>
       </div>
       <div class="footer-container">
         <footer class="py-3">
@@ -92,6 +112,52 @@
         </footer>
       </div>
     
-      
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            fetch("/auth/getUserProfile")
+                .then(response => {
+                    if (response.status === 401) {
+                        alert("You must be logged in to edit your profile.");
+                        window.location.href = "/login.html";
+                        return;
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data) {
+                        document.getElementById("email").value = data.email;
+                        document.getElementById("uname").value = data.uname;
+                    }
+                })
+                .catch(error => console.error("Error fetching user profile:", error));
+    
+            document.getElementById("editProfileForm").addEventListener("submit", function (event) {
+                event.preventDefault();
+    
+                const uname = document.getElementById("uname").value.trim();
+                const newPassword = document.getElementById("newPassword").value.trim();
+    
+                if (newPassword) {
+                    if (!confirm("Are you sure you want to change your password?")) {
+                        return;
+                    }
+                }
+    
+                fetch("/auth/updateUserProfile", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ uname, newPassword: newPassword || null })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                    if (newPassword) {
+                        window.location.href = "/login.html"; // Log out if password changed
+                    }
+                })
+                .catch(error => console.error("Error updating profile:", error));
+            });
+        });
+    </script>     
 </body>
 </html>

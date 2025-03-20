@@ -510,4 +510,51 @@ router.post("/sendComment", (req, res) => {
     });
 });
 
+// ✅ Get logged-in user's profile details
+router.get("/getUserProfile", (req, res) => {
+    if (!req.session.user_email) {
+        return res.status(401).json({ message: "User not logged in" });
+    }
+
+    const sql = "SELECT uname, email FROM register WHERE email = ?";
+    db.query(sql, [req.session.user_email], (err, results) => {
+        if (err) {
+            console.error("Error fetching user profile:", err);
+            return res.status(500).json({ message: "Database error" });
+        }
+        if (results.length === 0) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        res.status(200).json(results[0]);
+    });
+});
+
+// ✅ Update user profile (Username & Password)
+router.post("/updateUserProfile", async (req, res) => {
+    if (!req.session.user_email) {
+        return res.status(401).json({ message: "User not logged in" });
+    }
+
+    const { uname, newPassword } = req.body;
+    let updateQuery = "UPDATE register SET uname = ?";
+    let queryParams = [uname];
+
+    if (newPassword) {
+        const hashedPassword = await bcrypt.hash(newPassword, 8);
+        updateQuery += ", pass1 = ?";
+        queryParams.push(hashedPassword);
+    }
+
+    updateQuery += " WHERE email = ?";
+    queryParams.push(req.session.user_email);
+
+    db.query(updateQuery, queryParams, (err, result) => {
+        if (err) {
+            console.error("Error updating user profile:", err);
+            return res.status(500).json({ message: "Database error" });
+        }
+        res.status(200).json({ message: "Profile updated successfully!" });
+    });
+});
+
 module.exports = router;
