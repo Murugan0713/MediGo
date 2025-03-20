@@ -207,40 +207,53 @@
     </section>
     <h2 class="pb-2 border-bottom my-3 text-center">Our Services</h2>
     <div class="row row-cols-1 row-cols-md-3 g-4 text-center mx-3">
-      <div class="col">
-        <a href="AddDoctors.html">
-          <div class="card h-100">
-            <div class="card-body">
+      <!-- Add Doctors -->
+      <div class="col d-flex">
+        <a href="AddDoctors.html" class="w-100">
+          <div class="card h-100 d-flex flex-column">
+            <div class="card-body d-flex flex-column justify-content-center">
               <h5 class="card-title">Add Doctors</h5>
               <p class="card-text">Add doctors with their details.</p>
             </div>
           </div>
         </a>
+      </div>
+      
+      <!-- Doctor's Attendance -->
+      <div class="col d-flex flex-column">
+        <a href="doctor attendance.html" class="w-100">
+          <div class="card h-100 d-flex flex-column">
+            <div class="card-body d-flex flex-column justify-content-center">
+              <h5 class="card-title">Doctor's Attendance</h5>
+              <p class="card-text">Mark absented doctors list.</p>
+            </div>
+          </div>
+        </a>
         
-      </div>
-      <a href="doctor attendance.html">
-        <div class="col">
-        <div class="card h-100">
-          <div class="card-body">
-            <h5 class="card-title">Doctor's Attendance</h5>
-            <p class="card-text">Mark absented doctors list.</p>
+        <!-- View Doctor's Leave (Directly Below) -->
+        <a href="ViewDoctorsLeave.html" class="w-100 mt-3">
+          <div class="card h-100 d-flex flex-column">
+            <div class="card-body d-flex flex-column justify-content-center">
+              <h5 class="card-title">View Doctor's Leave</h5>
+              <p class="card-text">View and delete doctors leave.</p>
+            </div>
           </div>
-        </div>
+        </a>
       </div>
-      </a>
-      
-      <a href="Admin-DoctorsDetails.html">
-        <div class="col">
-        <div class="card h-100">
-          <div class="card-body">
-            <h5 class="card-title">Doctors Details</h5>
-            <p class="card-text">All Doctors Details</p>
+    
+      <!-- Doctors Details -->
+      <div class="col d-flex">
+        <a href="Admin-DoctorsDetails.html" class="w-100">
+          <div class="card h-100 d-flex flex-column">
+            <div class="card-body d-flex flex-column justify-content-center">
+              <h5 class="card-title">Doctors Details</h5>
+              <p class="card-text">All Doctors Details</p>
+            </div>
           </div>
-        </div>
+        </a>
       </div>
-      </a>
-      
     </div>
+    
     <section class="statistics">
       <h3>Health Statistics</h3>
       <img src="./Resources/GlobalHealthChart.webp" alt="Health Data Chart" />

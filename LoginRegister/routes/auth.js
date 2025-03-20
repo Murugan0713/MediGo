@@ -428,5 +428,35 @@ router.post("/cancelAppointment", (req, res) => {
     });
 });
 
+// ✅ Get all doctors' leave details (Ordered by recent date)
+router.get('/getDoctorsLeave', (req, res) => {
+    const sql = "SELECT id, doctor_id, doctor_name, doctor_specialty, DATE_FORMAT(leave_date, '%d-%m-%Y') AS formatted_date FROM doctorattendance ORDER BY leave_date DESC";
+
+    db.query(sql, (err, results) => {
+        if (err) {
+            console.error("Error fetching leave data:", err);
+            return res.status(500).json({ message: "Database error", error: err });
+        }
+        res.status(200).json(results);
+    });
+});
+
+
+// ✅ Delete doctor leave entry
+router.delete('/deleteDoctorLeave/:id', (req, res) => {
+    const leaveId = req.params.id;
+    const sql = "DELETE FROM doctorattendance WHERE id = ?";
+
+    db.query(sql, [leaveId], (err, result) => {
+        if (err) {
+            console.error("Error deleting leave entry:", err);
+            return res.status(500).json({ message: "Database error", error: err });
+        }
+        res.status(200).json({ message: "Leave entry deleted successfully!" });
+    });
+});
+
+
+
 
 module.exports = router;
