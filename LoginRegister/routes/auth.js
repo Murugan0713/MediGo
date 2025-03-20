@@ -457,6 +457,57 @@ router.delete('/deleteDoctorLeave/:id', (req, res) => {
 });
 
 
+// ✅ Get leave details for the logged-in doctor
+router.get('/getDoctorLeave', (req, res) => {
+    if (!req.session.doctor_id) {
+        return res.status(401).json({ message: "Doctor not logged in" });
+    }
 
+    const sql = "SELECT doctor_id, doctor_name, doctor_specialty, DATE_FORMAT(leave_date, '%d-%m-%Y') AS formatted_date FROM doctorattendance WHERE doctor_id = ? ORDER BY leave_date DESC";
+
+    db.query(sql, [req.session.doctor_id], (err, results) => {
+        if (err) {
+            console.error("Error fetching leave data:", err);
+            return res.status(500).json({ message: "Database error", error: err });
+        }
+        res.status(200).json(results);
+    });
+});
+
+//comment html file
+router.post("/sendComment", (req, res) => {
+    const { user_email, message } = req.body;
+
+    if (!user_email || !message) {
+        return res.status(400).json({ success: false, message: "All fields are required!" });
+    }
+
+    // Configure Nodemailer
+    const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+            user: "sagaaarun@gmail.com", // Replace with admin email
+            pass: "miuy opov yrla mpkd"  // Replace with the app password
+        }
+    });
+
+    const mailOptions = {
+        from: user_email,
+        to: "sagaaarun@gmail.com", // Admin email
+        subject: `User Feedback from ${user_email}`,
+        text: `User Email: ${user_email}\n\nMessage:\n${message}`
+    };
+
+    // ✅ Send the email
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.error("❌ Email failed:", error);
+            return res.status(500).json({ success: false, message: "Failed to send email." });
+        } else {
+            console.log("✅ Email sent successfully:", info.response);
+            return res.status(200).json({ success: true, message: "Feedback sent successfully!" });
+        }
+    });
+});
 
 module.exports = router;

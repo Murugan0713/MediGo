@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Doctors Leave</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+      }
+
+        .Logo {
+        height: 3rem;
+        width: 3rem;
+        margin-left: 2rem;
+        margin-right: 2rem;
+      }
+      #nav {
+        background-color: #4caf50 !important;
+      }
+      a {
+        color: black !important;
+        font-weight: 600 !important;
+        text-decoration: none;
+      }
+      a:hover {
+        color: white !important;
+      }
+      .dropdown-item:hover {
+        color: #4caf50 !important;
+      }
+      .btnn {
+        font-weight: 600;
+        background-color: white;
+      }
+      .back{
+        margin-left:7px;
+      }
+      /*for profile*/
+      .flex-shrink-0{
+        margin-left:20px;
+      }
+
+      .container{
+        min-height:30rem;
+
+      }
+      .containner {
+            max-width: 900px;
+            margin: 30px auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .btn-danger {
+            font-size: 14px;
+            padding: 5px 10px;
+        }
+
+      /*footer css*/
+      .footer-container,.py-3{
+        background-color: #4caf50;
+      }
+
+
+    </style>
+</head>
+<body>
+    <nav id="nav" class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          <img
+            class="Logo"
+            src="./Resources/pixelcut-export.png"
+            alt="Medico-Logo"
+          />
+            
+              <a href="DoctorsdashBoard.html"><button class="btn btn-outline-success btnn" type="submit">
+                back
+              </button></a>
+          </div>
+        </div>
+      </nav>
+<div class="container">
+    <div class="containner">
+        <h2 class="text-center">Your Leave Details</h2>
+        <table class="table table-bordered table-striped mt-3">
+            <thead class="table-success">
+                <tr>
+                    <th>S.No</th>
+                    <th>Doctor ID</th>
+                    <th>Name</th>
+                    <th>Specialty</th>
+                    <th>Leave Date</th>
+                </tr>
+            </thead>
+            <tbody id="leaveTableBody">
+                <!-- Data will be inserted here -->
+            </tbody>
+        </table>
+    </div>
+</div>
+    <div class="footer-container">
+        <footer class="py-3">
+          <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+            <li class="nav-item"><a href="#" class="nav-link px-2 " style="color: black;">Home</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 " style="color: black;">Features</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 " style="color: black;">Pricing</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 " style="color: black;">FAQs</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 " style="color: black;">About</a></li>
+          </ul>
+          <p class="text-center" style="color: black;">© 2024 Company, Inc</p>
+        </footer>
+      </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", fetchDoctorLeave);
+
+        // ✅ Fetch the logged-in doctor's leave details
+       // ✅ Fetch the logged-in doctor's leave details
+// ✅ Fetch the logged-in doctor's leave details
+function fetchDoctorLeave() {
+    fetch("http://localhost:3005/auth/getDoctorLeave")
+        .then(response => {
+            if (response.status === 401) {
+                alert("You must be logged in to view your leave details.");
+                window.location.replace("/DoctorsLogin.html"); // 🔹 Absolute path for redirection
+                return;
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (!data) return; // Stop execution if redirected
+            
+            const tableBody = document.getElementById("leaveTableBody");
+            tableBody.innerHTML = "";
+
+            if (data.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="5" class="text-center">No leave records found</td></tr>`;
+                return;
+            }
+
+            data.forEach((leave, index) => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${index + 1}</td> <!-- Serial Number -->
+                    <td>${leave.doctor_id}</td>
+                    <td>${leave.doctor_name}</td>
+                    <td>${leave.doctor_specialty || 'N/A'}</td> 
+                    <td>${leave.formatted_date}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        })
+        .catch(error => console.error("Error fetching leave data:", error));
+}
+
+// ✅ Call the function when the page loads
+document.addEventListener("DOMContentLoaded", fetchDoctorLeave);
+        
+    </script>
+
+</body>
+</html>

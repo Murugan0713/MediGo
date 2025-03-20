@@ -206,42 +206,54 @@
       </div>
     </section>
     <h2 class="pb-2 border-bottom my-3 text-center">Our Services</h2>
-    <div class="row row-cols-1 row-cols-md-3 g-4 text-center mx-3">
-      <div class="col">
-        <a href="DoctorsAvailableAppointments.html">
-          <div class="card h-100">
-            <div class="card-body">
-              <h5 class="card-title">Available Appointments</h5>
-              <p class="card-text">Add doctors with their details.</p>
-              
+<div class="row row-cols-1 row-cols-md-3 g-4 text-center mx-3">
+    <!-- Available Appointments -->
+    <div class="col d-flex">
+        <a href="DoctorsAvailableAppointments.html" class="w-100">
+            <div class="card h-100 d-flex flex-column">
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <h5 class="card-title">Available Appointments</h5>
+                    <p class="card-text">View and manage available appointments.</p>
+                </div>
             </div>
-          </div>
+        </a>
+    </div>
+
+    <!-- Booked Appointments + Leave Applications (Stacked) -->
+    <div class="col d-flex flex-column">
+        <a href="BookedAppointments.html" class="w-100">
+            <div class="card h-100 d-flex flex-column">
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <h5 class="card-title">Booked Appointments</h5>
+                    <p class="card-text">Check upcoming patient appointments.</p>
+                </div>
+            </div>
         </a>
         
-      </div>
-      <a href="BookedAppointments.html">
-        <div class="col">
-        <div class="card h-100">
-          <div class="card-body">
-            <h5 class="card-title">Booked Appointments</h5>
-            <p class="card-text">Mark absented doctors list.</p>
-          </div>
-        </div>
-      </div>
-      </a>
-      
-      <a href="ContactAdmin.html">
-        <div class="col">
-        <div class="card h-100">
-          <div class="card-body">
-            <h5 class="card-title">Contact Admin</h5>
-            <p class="card-text">You can apply for leave or you can contact admin through E-mail</p>
-          </div>
-        </div>
-      </div>
-      </a>
-      
+        <!-- Stacked Below -->
+        <a href="SpecificDoctorsLeave.html" class="w-100 mt-3">
+            <div class="card h-100 d-flex flex-column">
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <h5 class="card-title">View Your Leave</h5>
+                    <p class="card-text">View Your Leave Details</p>
+                </div>
+            </div>
+        </a>
     </div>
+
+    <!-- Contact Admin -->
+    <div class="col d-flex">
+        <a href="ContactAdmin.html" class="w-100">
+            <div class="card h-100 d-flex flex-column">
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <h5 class="card-title">Contact Admin</h5>
+                    <p class="card-text">Apply for leave or contact admin.</p>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+
     <section class="statistics">
       <h3>Health Statistics</h3>
       <img src="./Resources/GlobalHealthChart.webp" alt="Health Data Chart" />
