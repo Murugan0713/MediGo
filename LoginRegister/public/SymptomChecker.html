@@ -20,6 +20,9 @@
 * {
     box-sizing: border-box;
 }
+a{
+    text-decoration: none;
+}
 /* Below for navbar*/ 
 .Logo {
         height: 3rem;
@@ -48,7 +51,7 @@
 
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f7fa;
+    background-color: #f4f4f4;
     color: #333;
     margin: 0;
     padding: 0;
@@ -175,6 +178,10 @@ select {
     background: #fff url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNCIgaGVpZ2h0PSI4IiB2aWV3Qm94PSIwIDAgMTQgOCI+PHBvbHlsaW5lIHBvaW50cz0iMSAxbDYgNiA2LTYiIHN0eWxlPSJmaWxsOm5vbmUgc3Ryb2tlOiMwMDAgc3Ryb2tlLXdpZHRoOjIiLz48L3N2Zz4=') no-repeat right 10px center;
     padding-right: 30px; /* Space for dropdown arrow */
 }
+/*footer css*/
+.footer-container,.py-3{
+        background-color: #4caf50;
+      }
 ;
 
 /* Responsive Design */
@@ -243,7 +250,6 @@ select {
             class="Logo"
             src="./Resources/pixelcut-export.png"
             alt="Medico-Logo"
-            href="MediGo.html"
           />
           <button
             class="navbar-toggler"
@@ -257,11 +263,11 @@ select {
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ">
-              <li class="nav-item ">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="MediGo.html">Home</a>
               </li>
-              <li class="nav-item dropdown ">
+              <li class="nav-item dropdown">
                 <a
                   class="nav-link dropdown-toggle"
                   href="#"
@@ -273,17 +279,17 @@ select {
                 </a>
                 <ul class="dropdown-menu">
                   <li><a class="dropdown-item" href="SymptomChecker.html">Symptom Checker</a></li>
-                  <li><a class="dropdown-item" href="#">Health Articles</a></li>
+                  <li><a class="dropdown-item" href="healthy.html">Health Articles</a></li>
                   <li><hr class="dropdown-divider" /></li>
                   <li>
-                    <a class="dropdown-item" href="#">Doctor Appointments</a>
+                    <a class="dropdown-item" href="DoctorsAppointments.html">Doctor Appointments</a>
                   </li>
                 </ul>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="contact us.html">Contact Us</a>
               </li>
-              <li class="nav-item ">
+              <li class="nav-item">
                 <a class="nav-link" href="aboutus.html">About Us</a>
               </li>
             </ul>
@@ -293,24 +299,15 @@ select {
                 Your Profile
               </button>
               <ul class="dropdown-menu dropdown-menu-lg-end">
-                <li><button class="dropdown-item" type="button">Your Appointments</button></li>
-                <li><button class="dropdown-item" type="button">Another action</button></li>
+                <li><a href="YourAppointments.html"><button class="dropdown-item" type="button">Your Appointments</button></a></li>
+                <li><a href="UserEditProfile.html"><button class="dropdown-item" type="button">Edit Profile</button></a></li>
                 <li><hr class="dropdown-divider" /></li>
-                <li><button class="dropdown-item" type="button">Log Out</button></li>
+                <li><button class="dropdown-item" type="button" onclick="logout()">Log Out</button></li>
               </ul>
             </div>
-            <!--ends here-->
-            <form class="d-flex mb-0" role="search">
-              <input
-                class="form-control me-2"
-                type="search"
-                placeholder="Search"
-                aria-label="Search"
-              />
-              <button class="btn btn-outline-success "  type="submit">
-                Search
-              </button>
-            </form>
+            <button class="btn btn-outline-success btnn" type="button" onclick="history.back()">
+                Back
+            </button>
           </div>
         </div>
       </nav>
@@ -321,6 +318,8 @@ select {
 
     <section id="symptom-selection">
         <h2><span id="select-symptoms-text">Select Your Symptoms</span></h2>
+        
+        <p>*To Choose Multiple Option Use SearchBar or Click YouOptions While Pressing ctrl (ctrl+click your option)</p>
 
         <!-- Search Bar -->
         <input type="text" id="searchBar" placeholder="Search symptoms..." oninput="filterSymptoms()">
@@ -374,11 +373,20 @@ select {
             <!-- Remedies will be listed here based on symptoms -->
         </ul>
     </section>
-
+    <div class="footer-container">
+        <footer class="py-3">
+          <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+            <li class="nav-item"><a href="MediGo.html" class="nav-link px-2 " style="color: black;">Home</a></li>
+            <li class="nav-item"><a href="contact us.html" class="nav-link px-2 " style="color: black;">Contact Us</a></li>
+            <li class="nav-item"><a href="aboutus.html" class="nav-link px-2 " style="color: black;">About Us</a></li>
+          </ul>
+          <p class="text-center" style="color: black;">© 2025 Medigo. All Rights Reserved.</p>
+        </footer>
+      </div>
 <script>
 const diagnosisData = {
     'fever': {
-        diagnosis: ['Fever:Flu, COVID-19, Malaria, Typhoid'],
+        diagnosis: ['Fever:Flu, Malaria, Typhoid'],
         description: 'Fever is a temporary increase in body temperature, often caused by an infection.',
         remedies: ['Fever:Stay hydrated, Rest and take fever reducers, Cool compress on the forehead']
     },
@@ -605,6 +613,17 @@ function resetSymptoms() {
     // Clear remedies list
     document.getElementById('remedies-list').innerHTML = ''; 
 }
+//script for PopUp message warning
+document.addEventListener("DOMContentLoaded", function () {
+      const userConsent = confirm(
+          "⚠️ Symptom Checker is only for minor health issues. It only suggests possible health conditions and is not 100% accurate. Please book a doctor’s appointment for an accurate diagnosis. Do you want to continue?"
+      );
+
+      if (!userConsent) {
+          // Redirect to MediGo.html if the user clicks "Cancel"
+          window.location.href = "MediGo.html";
+      }
+  });
 </script>
 </body>
 </html>

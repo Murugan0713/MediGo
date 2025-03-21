@@ -75,82 +75,20 @@
     </style>
 </head>
 <body>
-    <nav id="nav" class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid">
-          <img
-            class="Logo"
-            src="./Resources/pixelcut-export.png"
-            alt="Medico-Logo"
-          />
-          <button
-            class="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="AdminDashBoard.html">Home</a>
-              </li>
-              <li class="nav-item dropdown">
-                <a
-                  class="nav-link dropdown-toggle"
-                  href="#"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  Services
-                </a>
-                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="#">Symptom Checker</a></li>
-                  <li><a class="dropdown-item" href="#">Health Articles</a></li>
-                  <li><hr class="dropdown-divider" /></li>
-                  <li>
-                    <a class="dropdown-item" href="#">Doctor Appointments</a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="contact us.html">Contact Us</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="aboutus.html">About Us</a>
-              </li>
-            </ul>
-            <!--for profile-->
-            <div class="btn-group">
-              <button type="button" class="btn btn-outline-success dropdown-toggle mb-lg-0 mb-3 me-3 " data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
-                Your Profile
-              </button>
-              <ul class="dropdown-menu dropdown-menu-lg-end">
-                <li><button class="dropdown-item" type="button">Your Appointments</button></li>
-                <li><button class="dropdown-item" type="button">Another action</button></li>
-                <li><hr class="dropdown-divider" /></li>
-                <li><button class="dropdown-item" type="button">Log Out</button></li>
-              </ul>
-            </div>
-            <!--ends here-->
-            <form class="d-flex" role="search">
-              <input
-                class="form-control me-2"
-                type="search"
-                placeholder="Search"
-                aria-label="Search"
-              />
-              <button class="btn btn-outline-success "  type="submit">
-                Search
-              </button>
-            </form>
-          </div>
-        </div>
-      </nav>
+  <nav id="nav" class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <img
+        class="Logo"
+        src="./Resources/pixelcut-export.png"
+        alt="Medico-Logo"
+      />
+        
+      <button class="btn btn-outline-success btnn" type="button" onclick="history.back()">
+        Back
+    </button>
+      </div>
+    </div>
+  </nav>
 
 <div class="container">
     <h2>Edit Doctor Details</h2>
@@ -227,17 +165,10 @@
     </form>
 </div>
 <div class="footer-container">
-    <footer class="py-3">
-      <ul class="nav justify-content-center border-bottom pb-3 mb-3">
-        <li class="nav-item"><a href="#" class="nav-link px-2 " style="color: black;">Home</a></li>
-        <li class="nav-item"><a href="#" class="nav-link px-2 " style="color: black;">Services</a></li>
-        <!--<li class="nav-item"><a href="#" class="nav-link px-2 " style="color: black;">Pricing</a></li>-->
-        <li class="nav-item"><a href="contact us.html" class="nav-link px-2 " style="color: black;">Contact Us</a></li>
-        <li class="nav-item"><a href="aboutus.html" class="nav-link px-2 " style="color: black;">About Us</a></li>
-      </ul>
-      <p class="text-center" style="color: black;">© 2024 Company, Inc</p>
-    </footer>
-  </div>
+  <footer class="py-3">
+    <p class="text-center" style="color: black;">© 2025 Medigo. All Rights Reserved.</p>
+  </footer>
+</div>
 <script>
 const urlParams = new URLSearchParams(window.location.search);
 const doctorId = urlParams.get('id');
@@ -324,6 +255,22 @@ document.getElementById("togglePassword").addEventListener("click", function () 
         passwordField.type = "password";
         this.textContent = "👁️"; // Show icon
     }
+});
+//Automatic age calculation
+document.getElementById("date_of_birth").addEventListener("change", function () {
+    const dob = new Date(this.value);
+    const today = new Date();
+    
+    let age = today.getFullYear() - dob.getFullYear();
+    const monthDiff = today.getMonth() - dob.getMonth();
+    const dayDiff = today.getDate() - dob.getDate();
+    
+    // Adjust age if birthday hasn't occurred yet this year
+    if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+        age--;
+    }
+    
+    document.getElementById("age").value = age;
 });
 
 </script>

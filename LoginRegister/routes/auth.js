@@ -7,6 +7,7 @@ const mysql = require ("mysql");
 const nodemailer = require("nodemailer");
 const session = require("express-session");
 const cors = require("cors");
+const bcrypt = require("bcryptjs");
 
 router.use(cors());
 
@@ -306,12 +307,23 @@ router.get("/getUserAppointments", (req, res) => {
         return res.status(401).json({ message: "User not logged in" });
     }
 
-    const sql = "SELECT * FROM patients_details WHERE email = ? ORDER BY appointment_date DESC";
+    // ✅ Convert appointment_date to actual DATE and sort properly
+    const sql = `
+        SELECT id, doctor_id, doctor_specialty, first_name, last_name, email, phone_number, 
+               DATE_FORMAT(appointment_date, '%Y-%m-%d') AS appointment_date, 
+               appointment_time, status 
+        FROM patients_details 
+        WHERE email = ? 
+        ORDER BY STR_TO_DATE(appointment_date, '%Y-%m-%d') DESC, 
+                 STR_TO_DATE(appointment_time, '%h:%i %p') DESC`;
+
     db.query(sql, [userEmail], (err, results) => {
         if (err) {
-            console.error("Error fetching user appointments:", err);
+            console.error("❌ Error fetching user appointments:", err);
             return res.status(500).json({ message: "Database error" });
         }
+
+        console.log("✅ Sorted Appointments Sent to Frontend:", results); // Debugging
         res.status(200).json(results);
     });
 });

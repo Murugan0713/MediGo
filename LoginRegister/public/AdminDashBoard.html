@@ -141,7 +141,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Home</a>
+              <a class="nav-link active" aria-current="page" href="AdminDashBoard.html">Home</a>
             </li>
             <li class="nav-item dropdown">
               <a
@@ -154,53 +154,28 @@
                 Services
               </a>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Symptom Checker</a></li>
-                <li><a class="dropdown-item" href="#">Health Articles</a></li>
+                <li><a class="dropdown-item" href="AddDoctors.html">Add Doctors</a></li>
+                <li><a class="dropdown-item" href="Admin-DoctorsDetails.html">Doctors Details</a></li>
+                <li><a class="dropdown-item" href="ViewDoctorsLeave.html">View Doctors Leave</a></li>
                 <li><hr class="dropdown-divider" /></li>
                 <li>
-                  <a class="dropdown-item" href="#">Doctor Appointments</a>
+                  <a class="dropdown-item" href="doctor attendance.html">Doctors Attendance</a>
                 </li>
               </ul>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Contact Us</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">About Us</a>
-            </li>
           </ul>
           <!--for profile-->
-          <div class="btn-group">
-            <button type="button" class="btn btn-outline-success dropdown-toggle mb-lg-0 mb-3 me-3 " data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
-              Your Profile
+            <button type="button"  onclick="logout()" class="btn btn-outline-success dropdown-toggle mb-lg-0 mb-3 me-3 " data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
+              Log Out
             </button>
-            <ul class="dropdown-menu dropdown-menu-lg-end">
-              <li><button class="dropdown-item" type="button">Your Appointments</button></li>
-              <li><button class="dropdown-item" type="button">Another action</button></li>
-              <li><hr class="dropdown-divider" /></li>
-              <li><button class="dropdown-item" type="button">Log Out</button></li>
-            </ul>
-          </div>
-          <!--ends here-->
-          <form class="d-flex" role="search">
-            <input
-              class="form-control me-2"
-              type="search"
-              placeholder="Search"
-              aria-label="Search"
-            />
-            <button class="btn btn-outline-success "  type="submit">
-              Search
-            </button>
-          </form>
         </div>
       </div>
     </nav>
     <section class="hero">
       <div class="hero-text">
-        <h2>Your Health, Our Priority</h2>
+        <h2>"Welcome, Admin!"</h2>
         <p>
-          Find doctors, check symptoms, and stay informed with our articles!
+          "Oversee doctor profiles, manage appointments, and ensure seamless healthcare services."
         </p>
         
       </div>
@@ -261,15 +236,18 @@
     </section>
     <div class="footer-container">
       <footer class="py-3">
-        <ul class="nav justify-content-center border-bottom pb-3 mb-3">
-          <li class="nav-item"><a href="#" class="nav-link px-2 " style="color: black;">Home</a></li>
-          <li class="nav-item"><a href="#" class="nav-link px-2 " style="color: black;">Features</a></li>
-          <li class="nav-item"><a href="#" class="nav-link px-2 " style="color: black;">Pricing</a></li>
-          <li class="nav-item"><a href="#" class="nav-link px-2 " style="color: black;">FAQs</a></li>
-          <li class="nav-item"><a href="#" class="nav-link px-2 " style="color: black;">About</a></li>
-        </ul>
-        <p class="text-center" style="color: black;">© 2024 Company, Inc</p>
+        <p class="text-center" style="color: black;">© 2025 Medigo. All Rights Reserved.</p>
       </footer>
     </div>
+    <script>
+      function logout() {
+        // Clear session storage (or local storage if used)
+        sessionStorage.clear();
+        localStorage.removeItem("user"); // Adjust based on storage method
+    
+        // Redirect to login page
+        window.location.href = "login.html"; // Update with the correct login page URL
+      }
+    </script>
   </body>
 </html>

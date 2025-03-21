@@ -3,15 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+    crossorigin="anonymous"
+  />
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"
+  ></script>
     <title>Cardiovascular diseases</title>
 </head>
 <Style>
      
-    header{
-        display: block;
-        top: 0%;
-        position: sticky;
-    }
+   
+    
     body {
         font-family: Arial, sans-serif;
         margin: 0;
@@ -19,12 +27,7 @@
         background-color: #f4f4f9;
         color: #333;
     }
-    header,nav {
-        background-color: #008cba;
-        color: white;
-        padding: 20px 10px;
-        text-align: center;
-    }
+  
      .content{
         max-width: 1200px;
         margin: 20px auto;
@@ -49,15 +52,60 @@
        padding-top: 10px;
        height: 30ch;
     }
+      /* Below for navbar*/ 
+      .Logo {
+        height: 3rem;
+        width: 3rem;
+        margin-left: 2rem;
+        margin-right: 2rem;
+      }
+      #nav {
+        background-color: #4caf50 !important;
+      }
+      a {
+        color: black !important;
+        font-weight: 600 !important;
+        text-decoration: none;
+      }
+      a:hover {
+        color: white !important;
+      }
+      .dropdown-item:hover {
+        color: #4caf50 !important;
+      }
+      .btn {
+        font-weight: 600;
+        background-color: white;
+      }
+      /*Below for Footer*/
+      .footer-container,.py-3{
+        background-color: #4caf50;
+      }
+    
+
 </Style>
 <body>
-    <header><h1>cardiovascular diseases</h1></header>
+  <nav id="nav" class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <img
+        class="Logo"
+        src="./Resources/pixelcut-export.png"
+        alt="Medico-Logo"
+      />
+        
+      <button class="btn btn-outline-success btnn" type="button" onclick="history.back()">
+        Back
+    </button>
+      </div>
+    </div>
+  </nav>
+    
     <section class="content">
 
        <h1>Cardiovascular diseases (CVDs)</h1><p> <strong>Cardiovascular diseases (CVDs)</strong> are the leading cause of death globally, taking an estimated 17.9 million lives each year. CVDs are a group of disorders of the heart and blood vessels and include coronary heart disease, cerebrovascular disease, rheumatic heart disease and other conditions. More than four out of five CVD deaths are due to heart attacks and strokes, and one third of these deaths occur prematurely in people under 70 years of age.</p>
        <p>The most important behavioural risk factors of heart disease and stroke are unhealthy diet, physical inactivity, tobacco use and harmful use of alcohol. Amongst environmental risk factors, air pollution is an important factor. The effects of behavioural risk factors may show up in individuals as raised blood pressure, raised blood glucose, raised blood lipids, and overweight and obesity. These “intermediate risks factors” can be measured in primary care facilities and indicate an increased risk of heart attack, stroke, heart failure and other complications.</p>
     
-    <img src="vascular.jpg">
+    <img src="./Resources/vascular.jpg">
 
     <h1>Overview</h1>
     <strong>Cardiovascular diseases (CVDs) are a group of disorders of the heart and blood vessels. They include:</strong>
@@ -86,17 +134,27 @@
 <strong>How is cardiovascular disease treated?</strong>
 <strong>Treatment plans can vary depending on your symptoms and the type of cardiovascular disease you have. Cardiovascular disease treatment may include:
 </strong>
-<center><img src="cardio.jpg" class="image"></center>
+<center><img src="./Resources/cardio.jpg" class="image"></center>
 <p><strong>Lifestyle changes: </strong>Examples include changing your diet, increasing your aerobic activity and quitting smoking or tobacco products (including vaping).</p>
 <p><strong>Medications: </strong>Your healthcare provider may prescribe medications to help manage cardiovascular disease. Medication type will depend on what kind of cardiovascular disease you have.</p>
 <p><strong>Procedures or surgeries: </strong>If medications aren’t enough, your healthcare provider may use certain procedures or surgeries to treat your cardiovascular disease. Examples include stents in your heart or leg arteries, minimally invasive heart surgery, open-heart surgery, ablations or cardioversion</p>
 <p><strong>Cardiac rehabilitation:</strong>You may need a monitored exercise program to help your heart get stronger.</p>
 <p><strong>Active surveillance: </strong>You may need careful monitoring over time without medications or procedures/surgeries.</p>
+<div>
+  <center>  <h1>FOR MORE FURTHER INFORMATION VISIT</h1>
+    <a href="https://www.heart.org/en/health-topics/consumer-healthcare/what-is-cardiovascular-disease">Click here for more information</a></center>
+</div>
 </section>
-<nav>
-    <h1>FOR MORE FURTHER INFORMATION VISIT</h1>
-    <a href="https://www.heart.org/en/health-topics/consumer-healthcare/what-is-cardiovascular-disease">Click here for more information</a>
-</nav>
+<div class="footer-container">
+  <footer class="py-3">
+    <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+      <li class="nav-item"><a href="MediGo.html" class="nav-link px-2 " style="color: black;">Home</a></li>
+      <li class="nav-item"><a href="contact us.html" class="nav-link px-2 " style="color: black;">Contact Us</a></li>
+      <li class="nav-item"><a href="aboutus.html" class="nav-link px-2 " style="color: black;">About Us</a></li>
+    </ul>
+    <p class="text-center" style="color: black;">© 2025 Medigo. All Rights Reserved.</p>
+  </footer>
+</div>   
 </body>
 </html>
 

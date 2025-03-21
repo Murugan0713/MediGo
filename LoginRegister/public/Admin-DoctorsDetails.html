@@ -57,7 +57,10 @@
       .footer-container,.py-3{
         background-color: #4caf50;
       }
-
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+      }
 
     </style>
 </head>
@@ -80,47 +83,6 @@
           >
             <span class="navbar-toggler-icon"></span>
           </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="AdminDashBoard.html">Home</a>
-              </li>
-              <li class="nav-item dropdown">
-                <a
-                  class="nav-link dropdown-toggle"
-                  href="#"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  Services
-                </a>
-                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="#">Symptom Checker</a></li>
-                  <li><a class="dropdown-item" href="#">Health Articles</a></li>
-                  <li><hr class="dropdown-divider" /></li>
-                  <li>
-                    <a class="dropdown-item" href="#">Doctor Appointments</a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Contact Us</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">About Us</a>
-              </li>
-            </ul>
-            <!--for profile-->
-            <div class="btn-group">
-              <ul class="dropdown-menu dropdown-menu-lg-end">
-                <li><button class="dropdown-item" type="button">Your Appointments</button></li>
-                <li><button class="dropdown-item" type="button">Another action</button></li>
-                <li><hr class="dropdown-divider" /></li>
-                <li><button class="dropdown-item" type="button">Log Out</button></li>
-              </ul>
-            </div>
-            <!--ends here-->
             <form class="d-flex" role="search">
               <input
                 class="form-control me-2"
@@ -146,14 +108,7 @@
       </div>
       <div class="footer-container">
         <footer class="py-3">
-          <ul class="nav justify-content-center border-bottom pb-3 mb-3">
-            <li class="nav-item"><a href="#" class="nav-link px-2 " style="color: black;">Home</a></li>
-            <li class="nav-item"><a href="#" class="nav-link px-2 " style="color: black;">Features</a></li>
-            <li class="nav-item"><a href="#" class="nav-link px-2 " style="color: black;">Pricing</a></li>
-            <li class="nav-item"><a href="#" class="nav-link px-2 " style="color: black;">FAQs</a></li>
-            <li class="nav-item"><a href="#" class="nav-link px-2 " style="color: black;">About</a></li>
-          </ul>
-          <p class="text-center" style="color: black;">© 2024 Company, Inc</p>
+          <p class="text-center" style="color: black;">© 2025 Medigo. All Rights Reserved.</p>
         </footer>
       </div>
       <script>
@@ -192,13 +147,14 @@
 <head>
   <style>
     .doctor-card {
-      border: 1px solid black;
+      border:none;
       margin-bottom: 20px;
       margin-top: 20px;
       padding: 10px;
       position: relative;
-      background-color:#D3D3D3;
-      border-radius:5px;
+      background-color:white;
+      border-radius:10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
     .image {
       display: flex;

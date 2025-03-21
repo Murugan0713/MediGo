@@ -73,7 +73,7 @@
         </div>
       </nav>
         <div class="container mt-5">
-            <h2>Edit Profile</h2>
+          <center><h2>Edit Profile</h2></center>  
             <form>
                 <div class="mb-3">
                     <label class="form-label">Doctor ID</label>
@@ -143,35 +143,39 @@
         </footer>
       </div>
       <script>
-        document.addEventListener("DOMContentLoaded", function () {
-    fetch("/auth/getCurrentDoctor")
+       document.addEventListener("DOMContentLoaded", function () {
+    // ✅ Check if doctor_id exists in local storage
+    const doctorId = localStorage.getItem("doctor_id");
+    
+    if (!doctorId) {
+        alert("You are not logged in. Redirecting to the Doctor Login page.");
+        window.location.href = "DoctorLogin.html"; // Redirect immediately
+        return; // Stop further execution
+    }
+
+    // ✅ Fetch doctor details if doctor_id is present
+    fetch(`/auth/getDoctorById/${doctorId}`)
         .then(response => response.json())
-        .then(data => {
-            console.log("Doctor ID from session:", data.doctor_id);  // ✅ Debugging log
-            if (data.doctor_id) {
-                fetch(`/auth/getDoctorById/${data.doctor_id}`)
-                    .then(response => response.json())
-                    .then(doctor => {
-                        console.log("Fetched Doctor Details:", doctor);  // ✅ Debugging log
-                        document.getElementById("doctor_id").value = doctor.doctor_id;
-                        document.getElementById("first_name").value = doctor.first_name;
-                        document.getElementById("last_name").value = doctor.last_name;
-                        document.getElementById("date_of_birth").value = doctor.date_of_birth.substring(0, 10);
-                        document.getElementById("age").value = doctor.age;
-                        document.getElementById("gender").value = doctor.gender;
-                        document.getElementById("email").value = doctor.email;
-                        document.getElementById("phone_number").value = doctor.phone_number;
-                        document.getElementById("permanent_address").value = doctor.permanent_address;
-                        document.getElementById("current_address").value = doctor.current_address;
-                        document.getElementById("doctor_specialty").value = doctor.doctor_specialty;
-                    })
-                    .catch(error => console.error("Error fetching doctor details:", error));
-            }
+        .then(doctor => {
+            console.log("📌 Date received from Backend:", doctor.date_of_birth); // ✅ Debug received date
+
+            // ✅ Directly assign the string without Date object conversion
+            document.getElementById("doctor_id").value = doctor.doctor_id;
+            document.getElementById("first_name").value = doctor.first_name;
+            document.getElementById("last_name").value = doctor.last_name;
+            document.getElementById("date_of_birth").value = doctor.date_of_birth;
+            document.getElementById("age").value = doctor.age;
+            document.getElementById("gender").value = doctor.gender;
+            document.getElementById("email").value = doctor.email;
+            document.getElementById("phone_number").value = doctor.phone_number;
+            document.getElementById("permanent_address").value = doctor.permanent_address;
+            document.getElementById("current_address").value = doctor.current_address;
+            document.getElementById("doctor_specialty").value = doctor.doctor_specialty;
         })
-        .catch(error => console.error("Error fetching doctor session:", error));
+        .catch(error => console.error("❌ Error fetching doctor details:", error));
 });
 
-//for update details
+// ✅ Update Profile Function
 function updateProfile() {
     const doctorId = document.getElementById("doctor_id").value;
     const updatedData = {
@@ -188,7 +192,7 @@ function updateProfile() {
     };
 
     fetch(`/auth/updateDoctor/${doctorId}`, {
-        method: "PUT",  // ✅ Ensure it's PUT
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updatedData)
     })
@@ -196,14 +200,30 @@ function updateProfile() {
     .then(data => {
         alert(data.message);
         if (data.message.includes("success")) {
-            window.location.href = "DoctorsdashBoard.html";  // Redirect on success
+            window.location.href = "DoctorsdashBoard.html"; // Redirect on success
         }
     })
-    .catch(error => console.error("Error updating profile:", error));
+    .catch(error => console.error("❌ Error updating profile:", error));
 }
+//Automatic Age calculation
+document.getElementById("date_of_birth").addEventListener("change", function () {
+    const dob = new Date(this.value);
+    const today = new Date();
+    
+    let age = today.getFullYear() - dob.getFullYear();
+    const monthDiff = today.getMonth() - dob.getMonth();
+    const dayDiff = today.getDate() - dob.getDate();
+    
+    // Adjust age if birthday hasn't occurred yet this year
+    if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+        age--;
+    }
+    
+    document.getElementById("age").value = age;
+});
 
-
-      </script>
+    </script>
+    
           
       
 </body>

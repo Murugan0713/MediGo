@@ -243,16 +243,28 @@ exports.getDoctorById = (req, res) => {
 
   db.query(sql, [doctor_id], (err, result) => {
     if (err) {
-      console.error("Error fetching doctor details:", err);
+      console.error("❌ Error fetching doctor details:", err);
       return res.status(500).json({ message: "Error fetching doctor details" });
     }
     if (result.length > 0) {
-      res.status(200).json(result[0]);
+      const doctor = result[0];
+
+      console.log("📌 Doctor DOB from DB:", doctor.date_of_birth); // ✅ Debug raw date
+
+      // ✅ Fix the timezone issue
+      let formattedDOB = new Date(doctor.date_of_birth);
+      formattedDOB.setHours(formattedDOB.getHours() + 5, formattedDOB.getMinutes() + 30); // Convert UTC to IST
+      console.log("📌 Fixed Date in Backend:", formattedDOB.toISOString().split("T")[0]);
+
+      doctor.date_of_birth = formattedDOB.toISOString().split("T")[0]; // Send Correct Date
+
+      res.status(200).json(doctor);
     } else {
       res.status(404).json({ message: "Doctor not found" });
     }
   });
 };
+
 
 // ✅ Update Doctor Details
 exports.updateDoctor = async (req, res) => {
@@ -275,11 +287,9 @@ exports.updateDoctor = async (req, res) => {
       let hashedPassword;
 
       if (doctor_password) {
-          // ✅ Hash the new password
           hashedPassword = await bcrypt.hash(doctor_password, 8);
-          updateDoctorInDB();
       } else {
-          // ✅ Keep the old password if no new one is provided
+          // Fetch the existing password if not updated
           const getPasswordSQL = "SELECT doctor_password FROM DoctorsDetails WHERE doctor_id = ?";
           db.query(getPasswordSQL, [doctor_id], (err, results) => {
               if (err) {
@@ -287,21 +297,25 @@ exports.updateDoctor = async (req, res) => {
                   return res.status(500).json({ message: "Error updating doctor password" });
               }
               if (results.length > 0) {
-                  hashedPassword = results[0].doctor_password;  // ✅ Keep the existing password
-                  updateDoctorInDB();
+                  hashedPassword = results[0].doctor_password;
               } else {
                   return res.status(404).json({ message: "Doctor not found" });
               }
+
+              // Call update function after fetching the password
+              updateDoctorInDB();
           });
+          return;
       }
 
-      // ✅ Function to update the doctor in DB
+      updateDoctorInDB();
+
       function updateDoctorInDB() {
-          const formattedDOB = date_of_birth ? new Date(date_of_birth).toISOString().split("T")[0] : null;
+          const formattedDOB = new Date(date_of_birth).toISOString().split("T")[0];
 
           const sql = `UPDATE DoctorsDetails 
-                       SET doctor_password=?, first_name=?, last_name=?, date_of_birth=?, age=?, gender=?, email=?, phone_number=?, permanent_address=?, current_address=?, doctor_specialty=? 
-                       WHERE doctor_id=?`;
+                      SET doctor_password=?, first_name=?, last_name=?, date_of_birth=?, age=?, gender=?, email=?, phone_number=?, permanent_address=?, current_address=?, doctor_specialty=? 
+                      WHERE doctor_id=?`;
 
           const values = [
               hashedPassword,
@@ -319,21 +333,20 @@ exports.updateDoctor = async (req, res) => {
           ];
 
           db.query(sql, values, (err, result) => {
-            if (err) {
-                console.error("❌ Error updating doctor:", err);
-                return res.status(500).json({ message: "Error updating doctor", error: err });
-            }
-            console.log("✅ Doctor updated successfully!");
-            res.status(200).json({ message: "Doctor updated successfully!" });
-        });
-        
+              if (err) {
+                  console.error("❌ Error updating doctor:", err);
+                  return res.status(500).json({ message: "Error updating doctor", error: err });
+              }
+              console.log("✅ Doctor updated successfully!");
+              res.status(200).json({ message: "Doctor updated successfully!" });
+          });
       }
+
   } catch (err) {
       console.error("❌ Error updating doctor:", err);
       res.status(500).json({ message: "Internal server error" });
   }
 };
-
 
 //For storing doctors absentese
 exports.submitAttendance = (req, res) => {
@@ -356,6 +369,5 @@ exports.submitAttendance = (req, res) => {
       res.status(200).json({ message: "Attendance submitted successfully!" });
   });
 };
-
 
 

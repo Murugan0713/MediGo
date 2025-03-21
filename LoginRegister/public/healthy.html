@@ -3,6 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+    crossorigin="anonymous"
+  />
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"
+  ></script>
     <title>Improvring Digestive health</title>
     <style>
         body {
@@ -12,12 +23,7 @@
             background-color: #f4f4f9;
             color: #333;
         }
-        header, nav {
-            background-color: #008cba;
-            color: white;
-            padding: 20px 10px;
-            text-align: center;
-        }
+       
          .content{
             max-width: 1200px;
             margin: 20px auto;
@@ -41,15 +47,64 @@
             max-width: 40%;
             height: 30ch;
         }
+          /* Below for navbar*/ 
+          .Logo {
+        height: 3rem;
+        width: 3rem;
+        margin-left: 2rem;
+        margin-right: 2rem;
+      }
+      #nav {
+        background-color: #4caf50 !important;
+      }
+      a {
+        color: black !important;
+        font-weight: 600 !important;
+        text-decoration: none;
+      }
+      a:hover {
+        color: white !important;
+      }
+      .dropdown-item:hover {
+        color: #4caf50 !important;
+      }
+      .btn {
+        font-weight: 600;
+        background-color: white;
+      }
+      /*Below for Footer*/
+      .footer-container,.py-3{
+        background-color: #4caf50;
+      }
+        .click{
+          width: 100%;
+          height: 2px;
+          background-color: white;
+          margin: 10px 0;
+        }
+      
+     
     </style>
 </head>
 <body>
+  <nav id="nav" class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <img
+        class="Logo"
+        src="./Resources/pixelcut-export.png"
+        alt="Medico-Logo"
+      />
+        
+      <button class="btn btn-outline-success btnn" type="button" onclick="history.back()">
+        Back
+    </button>
+      </div>
+    </div>
+  </nav>
 
-<header>
-    <h1>Improving Digestive Health</h1>
-</header>
-<section class="content">
-    <img src="foods.webp" class="img">
+<section class="content">  
+  <h1>Improving Digestive Health</h1>
+    <img src="./Resources/foods.webp" class="img">
     <p>A healthy digestive system is essential for nutrient absorption and overall health. Common issues include bloating, constipation, and indigestion.Other organs also contribute to the digestive process. The liver produces bile, a brownish-yellow liquid that helps to digest fat. Bile is stored until needed in the gallbladder. The pancreas works with the small intestine to produce enzymes needed to help digest proteins, fats, and carbohydrates.</p>
     <p><strong>Suggestions:</strong></p>
     <ul>
@@ -67,8 +122,8 @@
     <p>Adequate fiber is also important for good digestion. Fiber helps to soften and provide bulk to stool, which allows it to pass more easily through the intestines.</p>
 
     <div class="container">
-<img src="digestive.jpg">
-<img src="dig.jpg"></div>
+<img src="./Resources/digestive.jpg">
+<img src="./Resources/dig.jpg"></div>
 <p>There are two types of fiber: insoluble and soluble. Insoluble fiber is found in whole grains, wheat cereals, and vegetables such as carrots, celery, and tomatoes. Soluble fiber sources include barley, oatmeal, beans, nuts, and fruits such as apples, berries, citrus fruits, and pears. Over-the-counter fiber supplements (capsules, chewable tablets, and powders mixed with water) may be an option for people who have trouble eating enough fiber-rich food. </p>
 
 <strong>What are common digestive diseases and conditions?</strong>
@@ -116,10 +171,20 @@
 <p><a href="https://www.health.harvard.edu/a_to_z/gallstones-a-to-z">Gallstones</a>. Gallstones are hardened bits of bile that form inside the gallbladder, a pear-shaped pouch that sits just below the liver. Bile makes it easier for the body to digest fat. </p>
 
 <p>Most gallstones don’t cause any symptoms or problems. Small stones can pass out of the body through the intestines. However, gallstones can cause symptoms if they get caught in the narrow outlet of the gallbladder or in the ducts that drain the gallbladder. Symptoms include abdominal pain, usually high in the abdomen and often in the center or on the right side (where the gallbladder is located), and can spread to the area of the right shoulder blade. When symptoms recur or the gallbladder becomes inflamed, the gallbladder needs to be surgically removed. </p>
+<div>
+  <center> <h3>FOR MORE FURTHER INFORMATION VISIT</h3>
+    <div class="click"><a href="https://www.niddk.nih.gov/health-information/digestive-diseases/digestive-system-how-it-works">click here for more information</a></center></div>
+</div>
 </section>
-<nav>
-    <h3>FOR MORE FURTHER INFORMATION VISIT</h3>
-        <a href="https://www.niddk.nih.gov/health-information/digestive-diseases/digestive-system-how-it-works">click here for more information</a>
-</nav>  
+<div class="footer-container">
+  <footer class="py-3">
+    <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+      <li class="nav-item"><a href="MediGo.html" class="nav-link px-2 " style="color: black;">Home</a></li>
+      <li class="nav-item"><a href="contact us.html" class="nav-link px-2 " style="color: black;">Contact Us</a></li>
+      <li class="nav-item"><a href="aboutus.html" class="nav-link px-2 " style="color: black;">About Us</a></li>
+    </ul>
+    <p class="text-center" style="color: black;">© 2025 Medigo. All Rights Reserved.</p>
+  </footer>
+</div>  
 </body>
 </html>

@@ -3,7 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mental Health</title>
+      <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+    crossorigin="anonymous"
+  />
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"
+  ></script>
+  <title>Mental Health</title>
 </head>
 <style>
     body {
@@ -13,12 +24,8 @@
         background-color: #f4f4f9;
         color: #333;
     }
-    header, nav{
-        background-color: #008cba;
-        color: white;
-        padding: 20px 10px;
-        text-align: center;
-    }
+    
+    
     main {
         max-width: 1200px;
         margin: 20px auto;
@@ -45,22 +52,66 @@
        height: auto;
        border-radius: 8px;
        }
-       
+         /* Below for navbar*/ 
+         .Logo {
+        height: 3rem;
+        width: 3rem;
+        margin-left: 2rem;
+        margin-right: 2rem;
+      }
+      #nav {
+        background-color: #4caf50 !important;
+      }
+      a {
+        color: black !important;
+        font-weight: 600 !important;
+        text-decoration: none;
+        
+      }
+      a:hover {
+        color: white !important;
+      }
+      .dropdown-item:hover {
+        color: #4caf50 !important;
+      }
+      .btn {
+        font-weight: 600;
+        background-color: white;
+      }
+      /*Below for Footer*/
+      .footer-container,.py-3{
+        background-color: #4caf50;
+      }
+    
+
 </style>
 
 <body>
-    <header><h1>Mental Health</h1></header>
-
+  <nav id="nav" class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <img
+        class="Logo"
+        src="./Resources/pixelcut-export.png"
+        alt="Medico-Logo"
+      />
+        
+      <button class="btn btn-outline-success btnn" type="button" onclick="history.back()">
+        Back
+    </button>
+      </div>
+    </div>
+  </nav>
 <main>
+   <h1>Mental Health</h1>
 <strong>Overview</strong>
 <p>Mental health is a state of mental well-being that enables people to cope with the stresses of life, realize their abilities, learn well and work well, and contribute to their community. It has intrinsic and instrumental value and is integral to our well-being.</p>
 <p>  At any one time, a diverse set of individual, family, community and structural factors may combine to protect or undermine mental health. Although most people are resilient, people who are exposed to adverse circumstances – including poverty, violence, disability and inequality – are at higher risk of developing a mental health condition.</p>
-<img src="overview.jpg">
+<img src="./Resources/overview.jpg">
 <p>Mental health conditions include mental disorders and psychosocial disabilities as well as other mental states associated with significant distress, impairment in functioning or risk of self-harm.</p>
 
 <strong>Impact</strong>
 <p>Globally, mental disorders account for 1 in 6 years lived with disability. People with severe mental health conditions die 10 to 20 years earlier than the general population. And having a mental health condition increases the risk of suicide and experiencing human rights violations.</p>
-<img src="mental.png" class="gif">
+<img src="./Resources/mental.png" class="gif">
 <p>In 2019, 970 million people globally were living with a mental disorder, with anxiety and depression the most common.</p>    
 <p> Mental health conditions can cause difficulties in all aspects of life, including relationships with family, friends and community. They can result from or lead to problems at school and at work.</p>
 <p>The economic consequences of mental health conditions are also enormous, with productivity losses significantly outstripping the direct costs of care.</p>
@@ -119,12 +170,20 @@ In 2019, <a href="https://iris.who.int/handle/10665/310981">WHO launched the WHO
     <p>Some people call this awareness "mindfulness". Mindfulness can help you enjoy life more and understand yourself better. It can positively change the way you feel about life and how you approach challenges.</p>
     <p>Read more about mindfulness, including steps you can take to be more mindful in your everyday life.</p>
 </p>
+<div>
+  <center><h3>FOR MORE FURTHER INFORMATION VISIT</h3>
+    <a href="https://medlineplus.gov/howtoimprovementalhealth.html">click here for more information</a></center>
+</div>
 </main>
-<nav>
-    <h3>FOR MORE FURTHER INFORMATION VISIT</h3>
-        <a href="https://medlineplus.gov/howtoimprovementalhealth.html">click here for more information</a>
-</nav>
-
-
+<div class="footer-container">
+  <footer class="py-3">
+    <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+      <li class="nav-item"><a href="MediGo.html" class="nav-link px-2 " style="color: black;">Home</a></li>
+      <li class="nav-item"><a href="contact us.html" class="nav-link px-2 " style="color: black;">Contact Us</a></li>
+      <li class="nav-item"><a href="aboutus.html" class="nav-link px-2 " style="color: black;">About Us</a></li>
+    </ul>
+    <p class="text-center" style="color: black;">© 2025 Medigo. All Rights Reserved.</p>
+  </footer>
+</div> 
 </body>
 </html>

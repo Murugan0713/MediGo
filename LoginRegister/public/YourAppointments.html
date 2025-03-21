@@ -74,9 +74,9 @@
             alt="Medico-Logo"
           />
             
-              <a href="MediGo.html"><button class="btn btn-outline-success btnn" type="submit">
-                back
-              </button></a>
+          <button class="btn btn-outline-success btnn" type="button" onclick="history.back()">
+            Back
+        </button>
           </div>
         </div>
       </nav>
@@ -91,47 +91,60 @@
         <footer class="py-3">
           <ul class="nav justify-content-center border-bottom pb-3 mb-3">
             <li class="nav-item"><a href="MediGo.html" class="nav-link px-2 " style="color: black;">Home</a></li>
-            <li class="nav-item"><a href="#" class="nav-link px-2 " style="color: black;">Features</a></li>
-            <li class="nav-item"><a href="#" class="nav-link px-2 " style="color: black;">Pricing</a></li>
-            <li class="nav-item"><a href="#" class="nav-link px-2 " style="color: black;">FAQs</a></li>
-            <li class="nav-item"><a href="#" class="nav-link px-2 " style="color: black;">About</a></li>
+            <li class="nav-item"><a href="contact us.html" class="nav-link px-2 " style="color: black;">Contact Us</a></li>
+            <li class="nav-item"><a href="aboutus.html" class="nav-link px-2 " style="color: black;">About Us</a></li>
           </ul>
-          <p class="text-center" style="color: black;">© 2024 Company, Inc</p>
+          <p class="text-center" style="color: black;">© 2025 Medigo. All Rights Reserved.</p>
         </footer>
       </div>
       <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            fetch("/auth/getUserAppointments")
-                .then(response => response.json())
-                .then(appointments => {
-                    const container = document.getElementById("appointments-container");
-                    container.innerHTML = "";
-      
-                    appointments.forEach(appt => {
-                        const card = document.createElement("div");
-                        card.classList.add("card","mt-3", "mb-3");
-                        card.innerHTML = `
-                            <div class="card-body">
-                                <h5 class="card-title">Your-Doctor-Id: ${appt.doctor_id}</h5>
-                                <p><strong>Doctor-Speciality:</strong> ${appt.doctor_specialty}</p>
-                                <p><strong>Patient Name:</strong> ${appt.first_name} ${appt.last_name}</p>
-                                <p><strong>Your Email-Id:</strong> ${appt.email}</p>
-                                <p><strong>Your Phone No:</strong> ${appt.phone_number}</p>
-                                <p><strong>Date:</strong> ${appt.appointment_date}</p>
-                                <p><strong>Time:</strong> ${appt.appointment_time}</p>
-                                <p><strong>Status:</strong> ${appt.status}</p>
-                                <button class="btn btn-danger remove-btn">Remove</button>
-                            </div>`;
-                        
-                        card.querySelector(".remove-btn").addEventListener("click", function () {
-                            card.remove();
-                        });
-                        
-                        container.appendChild(card);
-                    });
-                })
-                .catch(error => console.error("Error loading appointments:", error));
-        });
+     document.addEventListener("DOMContentLoaded", function () {
+    fetch("/auth/getUserAppointments")
+        .then(response => response.json())
+        .then(appointments => {
+            console.log("✅ Sorted Appointments (Received from Backend):", appointments); // Debugging
+
+            // ✅ Force sorting by date and time in JavaScript (just in case)
+            appointments.sort((a, b) => {
+                let dateA = new Date(a.appointment_date + " " + a.appointment_time);
+                let dateB = new Date(b.appointment_date + " " + b.appointment_time);
+                return dateB - dateA; // Descending order (newest first)
+            });
+
+            console.log("✅ Sorted Appointments (After Sorting in JavaScript):", appointments);
+
+            const container = document.getElementById("appointments-container");
+            container.innerHTML = "";
+
+            appointments.forEach(appt => {
+                const card = document.createElement("div");
+                card.classList.add("card", "mt-3", "mb-3");
+
+                card.innerHTML = `
+                    <div class="card-body">
+                        <h5 class="card-title">Your-Doctor-Id: ${appt.doctor_id}</h5>
+                        <p><strong>Doctor-Specialty:</strong> ${appt.doctor_specialty}</p>
+                        <p><strong>Patient Name:</strong> ${appt.first_name} ${appt.last_name}</p>
+                        <p><strong>Your Email-Id:</strong> ${appt.email}</p>
+                        <p><strong>Your Phone No:</strong> ${appt.phone_number}</p>
+                        <p><strong>Date:</strong> ${appt.appointment_date}</p>
+                        <p><strong>Time:</strong> ${appt.appointment_time}</p>
+                        <p><strong>Status:</strong> ${appt.status}</p>
+                        <button class="btn btn-danger remove-btn">Remove</button>
+                    </div>`;
+
+                card.querySelector(".remove-btn").addEventListener("click", function () {
+                    card.remove();
+                });
+
+                container.appendChild(card);
+            });
+        })
+        .catch(error => console.error("❌ Error loading appointments:", error));
+});
+
+
+
       </script>
 </body>
 </html>

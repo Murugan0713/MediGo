@@ -3,27 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+    crossorigin="anonymous"
+  />
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"
+  ></script>
     <title>Dengue</title>
 </head>
 <Style>
      
-    header{
-        display: block;
-        top: 0%;
-        position: sticky;
-    }
+   
     body {
         font-family: Arial, sans-serif;
         margin: 0;
         padding: 0;
         background-color: #f4f4f9;
         color: #333;
-    }
-    header,nav {
-        background-color: #008cba;
-        color: white;
-        padding: 20px 10px;
-        text-align: center;
     }
      .content{
         max-width: 1200px;
@@ -86,16 +87,63 @@ p {
         justify-content: center;
         gap: 20px;
     }
+      /* Below for navbar*/ 
+      .Logo {
+        height: 3rem;
+        width: 3rem;
+        margin-left: 2rem;
+        margin-right: 2rem;
+      }
+      #nav {
+        background-color: #4caf50 !important;
+      }
+      a {
+        color: black !important;
+        font-weight: 600 !important;
+        text-decoration: none;
+      }
+      a:hover {
+        color: white !important;
+      }
+      .dropdown-item:hover {
+        color: #4caf50 !important;
+      }
+      .btn {
+        font-weight: 600;
+        background-color: white;
+      }
+      /*Below for Footer*/
+      .footer-container,.py-3{
+        background-color: #4caf50;
+      }
+    
+
 </Style>
 <body>
-    <header><h1>Dengue and Dengue Severe</h1></header>
+    
+  <nav id="nav" class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <img
+        class="Logo"
+        src="./Resources/pixelcut-export.png"
+        alt="Medico-Logo"
+      />
+        
+      <button class="btn btn-outline-success btnn" type="button" onclick="history.back()">
+        Back
+    </button>
+      </div>
+    </div>
+  </nav>
+    
     <section class="content">
+      <h1>Dengue and Dengue Severe</h1>
         <h1>OVERVIEW</h1>
 <p>Dengue (break-bone fever) is a viral infection that spreads from mosquitoes to people. It is more common in tropical and subtropical climates.
 Most people who get dengue will not have symptoms. But for those who do, the most common symptoms are high fever, headache, body aches, nausea, and rash. Most will get better in 1–2 weeks. Some people develop severe dengue and need care in a hospital.
 In severe cases, dengue can be fatal. You can lower your risk of dengue by avoiding mosquito bites especially during the day.
 Dengue is treated with pain medicine as there is no specific treatment currently.</p>
-<div class="container"><img src="mosquite.webp"></div>
+<div class="container"><img src="./Resources/mosquite.webp"></div>
 <p>Millions of cases of dengue infection occur worldwide each year. Dengue fever is most common in Southeast Asia, the western Pacific islands, Latin America and Africa. But the disease has been spreading to new areas, including local outbreaks in Europe and southern parts of the United States.</p>
 
 <h1>Symptoms</h1>
@@ -127,17 +175,23 @@ Dengue is treated with pain medicine as there is no specific treatment currently
 <p>The vaccines are not available in the continental United States. But in 2019, the U.S. Food and Drug Administration approved a dengue vaccine called Dengvaxia for people ages 9 to 16 who have had dengue fever in the past and who live in U.S. territories and freely associated states where dengue fever is common.</p>
 </div>
 <div class="image">
-    <img src="dengueprevention.avif">
+    <img src="./Resources/dengueprevention.avif">
 </div>
-
 </div>
+<div> <center><h1>FOR MORE FURTHER INFORMATION VISIT</h1>
+  <a href="https://www.who.int/news-room/fact-sheets/detail/dengue-and-severe-dengue">click here to more information</a></center></div>
 </section>
-<nav>
-<h1>FOR MORE FURTHER INFORMATION VISIT</h1>
-<a href="https://www.who.int/news-room/fact-sheets/detail/dengue-and-severe-dengue">click here to more information</a>
 
-</nav>
-
+<div class="footer-container">
+  <footer class="py-3">
+    <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+      <li class="nav-item"><a href="MediGo.html" class="nav-link px-2 " style="color: black;">Home</a></li>
+      <li class="nav-item"><a href="contact us.html" class="nav-link px-2 " style="color: black;">Contact Us</a></li>
+      <li class="nav-item"><a href="aboutus.html" class="nav-link px-2 " style="color: black;">About Us</a></li>
+    </ul>
+    <p class="text-center" style="color: black;">© 2025 Medigo. All Rights Reserved.</p>
+  </footer>
+</div>  
 </body>
 </html>
 
