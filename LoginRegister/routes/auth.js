@@ -632,4 +632,23 @@ router.post("/updateUserProfile", async (req, res) => {
   });
 });
 
+// Add this route to your auth.js file
+router.get("/checkExistingLeave", (req, res) => {
+    const { doctor_id, leave_date } = req.query;
+    
+    if (!doctor_id || !leave_date) {
+        return res.status(400).json({ message: "Doctor ID and leave date are required" });
+    }
+
+    const sql = "SELECT id FROM doctorattendance WHERE doctor_id = ? AND leave_date = ?";
+    db.query(sql, [doctor_id, leave_date], (err, results) => {
+        if (err) {
+            console.error("Error checking existing leave:", err);
+            return res.status(500).json({ message: "Database error" });
+        }
+        
+        res.json({ exists: results.length > 0 });
+    });
+});
+
 module.exports = router;

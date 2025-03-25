@@ -80,6 +80,14 @@
             font-size: 14px;
             display: none;
         }
+        .leave-error {
+            color: red;
+            font-size: 16px;
+            font-weight: bold;
+            margin: 10px 0;
+            text-align: center;
+            display: none;
+        }
         /*Footer Section*/
     .footer-container,.py-3{
         background-color: #4caf50;
@@ -129,9 +137,14 @@
     
             <label for="Leave-date">Leave Date:</label>
             <input type="date" id="leave_date" name="leave_date" required>
+            
+            <!-- New leave error message -->
+            <div class="leave-error" id="leave-error">
+                ⚠️ This doctor has already taken leave on this date!
+            </div>
     
             <div class="submit">
-                <button type="submit">Submit</button>
+                <button type="submit" id="submit-btn">Submit</button>
             </div>
         </form>
     </div>
@@ -153,16 +166,20 @@
         const doctorSpecialtyInput = document.getElementById("doctor_specialty");
         const doctorIdError = document.getElementById("id-error");
         const leaveDateInput = document.getElementById("leave_date");
+        const leaveError = document.getElementById("leave-error");
+        const submitBtn = document.getElementById("submit-btn");
         const form = document.getElementById("attendanceForm");
     
-        let timeout = null; // ✅ Use debounce to avoid excessive API calls
+        let timeout = null;
+        let currentDoctorId = null;
     
-        // ✅ Fetch doctor details instantly as the user types
+        // Fetch doctor details when ID is entered
         doctorIdInput.addEventListener("input", function () {
-            clearTimeout(timeout); // Clear previous timeout
+            clearTimeout(timeout);
             const doctorId = doctorIdInput.value.trim();
+            currentDoctorId = doctorId;
     
-            if (doctorId.length >= 3) { // ✅ Fetch only when 3+ characters are entered
+            if (doctorId.length >= 3) {
                 timeout = setTimeout(() => {
                     fetch(`/auth/getDoctorDetails/${doctorId}`)
                         .then(response => response.json())
@@ -171,11 +188,13 @@
                                 doctorIdError.style.display = "none";
                                 doctorNameInput.value = data.doctor_name;
                                 doctorSpecialtyInput.value = data.doctor_specialty;
+                                checkExistingLeave(); // Check for existing leave when doctor ID changes
                             } else {
                                 doctorIdError.innerText = "❌ Doctor ID not found!";
                                 doctorIdError.style.display = "block";
                                 doctorNameInput.value = "";
                                 doctorSpecialtyInput.value = "";
+                                leaveError.style.display = "none";
                             }
                         })
                         .catch(err => {
@@ -184,16 +203,63 @@
                             doctorIdError.style.display = "block";
                             doctorNameInput.value = "";
                             doctorSpecialtyInput.value = "";
+                            leaveError.style.display = "none";
                         });
-                }, 500); // ✅ Add a small delay to optimize API requests
+                }, 500);
             } else {
                 doctorNameInput.value = "";
                 doctorSpecialtyInput.value = "";
+                leaveError.style.display = "none";
             }
         });
     
+        // Check for existing leave when date changes
+        leaveDateInput.addEventListener("change", function() {
+            if (currentDoctorId) {
+                checkExistingLeave();
+            }
+        });
+    
+        // Function to check if doctor already has leave on this date
+        function checkExistingLeave() {
+            const doctorId = doctorIdInput.value.trim();
+            const leaveDate = leaveDateInput.value;
+            
+            if (!doctorId || !leaveDate) return;
+            
+            fetch(`/auth/checkExistingLeave?doctor_id=${doctorId}&leave_date=${leaveDate}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.exists) {
+                        leaveError.style.display = "block";
+                        submitBtn.disabled = true;
+                        submitBtn.style.opacity = "0.6";
+                        submitBtn.style.cursor = "not-allowed";
+                    } else {
+                        leaveError.style.display = "none";
+                        submitBtn.disabled = false;
+                        submitBtn.style.opacity = "1";
+                        submitBtn.style.cursor = "pointer";
+                    }
+                })
+                .catch(err => {
+                    console.error("Error checking existing leave:", err);
+                    leaveError.style.display = "none";
+                    submitBtn.disabled = false;
+                    submitBtn.style.opacity = "1";
+                    submitBtn.style.cursor = "pointer";
+                });
+        }
+    
         form.addEventListener("submit", function (event) {
             event.preventDefault();
+    
+            // Double check leave status before submitting
+            checkExistingLeave();
+            
+            if (submitBtn.disabled) {
+                return;
+            }
     
             const formData = {
                 doctor_id: doctorIdInput.value.trim(),
