@@ -27,9 +27,10 @@ exports.register = (req, res) => {
         console.log(error);
         //return res.status(500).send('<center><h1>Internal Server Error</h1></center>');
       } else if (results.length > 0) {
-        res.send(
-          "<center><h1>That email has been registered already!</h1></center>"
-        );
+        return res.json({
+          status: "error",
+          message: "Email ID already exists",
+        });
       }
 
       // Hash the password
@@ -60,37 +61,43 @@ exports.login = (req, res) => {
   const { email, pass1 } = req.body;
 
   if (!email || !pass1) {
-      return res.status(400).json({ message: "Please enter both email and password." });
+    return res
+      .status(400)
+      .json({ message: "Please enter both email and password." });
   }
 
   const sql = "SELECT * FROM register WHERE email = ?";
   db.query(sql, [email], (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: "Internal Server Error" });
+    }
+
+    if (results.length === 0) {
+      return res
+        .status(401)
+        .json({ message: "Email ID or password is invalid" });
+    }
+
+    const user = results[0];
+    bcrypt.compare(pass1, user.pass1, (err, isMatch) => {
       if (err) {
-          console.error(err);
-          return res.status(500).json({ message: "Internal Server Error" });
+        console.error(err);
+        return res.status(500).json({ message: "Internal Server Error" });
       }
 
-      if (results.length === 0) {
-          return res.status(401).json({ message: "Email ID or password is invalid" });
+      if (!isMatch) {
+        return res
+          .status(401)
+          .json({ message: "Email ID or password is invalid" });
       }
 
-      const user = results[0];
-      bcrypt.compare(pass1, user.pass1, (err, isMatch) => {
-          if (err) {
-              console.error(err);
-              return res.status(500).json({ message: "Internal Server Error" });
-          }
+      // ✅ Store user email in session
+      req.session.user_email = user.email;
+      console.log("✅ Session Set:", req.session.user_email); // ✅ Debug session storage
 
-          if (!isMatch) {
-              return res.status(401).json({ message: "Email ID or password is invalid" });
-          }
-
-          // ✅ Store user email in session
-          req.session.user_email = user.email;
-          console.log("✅ Session Set:", req.session.user_email); // ✅ Debug session storage
-
-          res.redirect("/MediGo.html"); // Redirect user after successful login
-      });
+      res.redirect("/MediGo.html"); // Redirect user after successful login
+    });
   });
 };
 
@@ -142,34 +149,8 @@ exports.AddDoctors = async (req, res) => {
   console.log(req.body);
 
   const {
-      doctor_id,
-      doctor_password,
-      first_name,
-      last_name,
-      date_of_birth,
-      age,
-      gender,
-      email,
-      phone_number,
-      permanent_address,
-      current_address,
-      doctor_specialty
-  } = req.body;
-
-  if (!doctor_password) {
-      return res.status(400).json({ message: "Password is required!" });
-  }
-
-  let plainPassword = doctor_password;  // Store password as plain text
-
-  const image_path = req.file ? req.file.filename : 'default.jpg'; // ✅ Fix here
-
-  const sql = `INSERT INTO DoctorsDetails (doctor_id, doctor_password, first_name, last_name, date_of_birth, age, gender, email, phone_number, permanent_address, current_address, doctor_specialty, image_path) 
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-
-const values = [
     doctor_id,
-    plainPassword,  // ✅ Storing password as plain text
+    doctor_password,
     first_name,
     last_name,
     date_of_birth,
@@ -180,21 +161,44 @@ const values = [
     permanent_address,
     current_address,
     doctor_specialty,
-    image_path
-];
+  } = req.body;
 
+  if (!doctor_password) {
+    return res.status(400).json({ message: "Password is required!" });
+  }
+
+  let plainPassword = doctor_password; // Store password as plain text
+
+  const image_path = req.file ? req.file.filename : "default.jpg"; // ✅ Fix here
+
+  const sql = `INSERT INTO DoctorsDetails (doctor_id, doctor_password, first_name, last_name, date_of_birth, age, gender, email, phone_number, permanent_address, current_address, doctor_specialty, image_path) 
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
+  const values = [
+    doctor_id,
+    plainPassword, // ✅ Storing password as plain text
+    first_name,
+    last_name,
+    date_of_birth,
+    age,
+    gender,
+    email,
+    phone_number,
+    permanent_address,
+    current_address,
+    doctor_specialty,
+    image_path,
+  ];
 
   db.query(sql, values, (err, result) => {
-      if (err) {
-          console.error("Error inserting doctor details:", err);
-          res.status(500).json({ message: "Error adding doctor", error: err });
-      } else {
-          res.status(200).json({ message: "Doctor added successfully!" });
-      }
+    if (err) {
+      console.error("Error inserting doctor details:", err);
+      res.status(500).json({ message: "Error adding doctor", error: err });
+    } else {
+      res.status(200).json({ message: "Doctor added successfully!" });
+    }
   });
 };
-
-
 
 exports.deleteDoctor = (req, res) => {
   const doctor_id = req.params.id;
@@ -209,7 +213,11 @@ exports.deleteDoctor = (req, res) => {
     }
 
     if (result.length > 0) {
-      const imagePath = path.join(__dirname, '../uploads', result[0].image_path);
+      const imagePath = path.join(
+        __dirname,
+        "../uploads",
+        result[0].image_path
+      );
 
       // ✅ Check if the file exists before deleting
       if (fs.existsSync(imagePath)) {
@@ -229,7 +237,6 @@ exports.deleteDoctor = (req, res) => {
         }
         res.status(200).json({ message: "Doctor deleted successfully" });
       });
-
     } else {
       res.status(404).json({ message: "Doctor not found" });
     }
@@ -253,8 +260,14 @@ exports.getDoctorById = (req, res) => {
 
       // ✅ Fix the timezone issue
       let formattedDOB = new Date(doctor.date_of_birth);
-      formattedDOB.setHours(formattedDOB.getHours() + 5, formattedDOB.getMinutes() + 30); // Convert UTC to IST
-      console.log("📌 Fixed Date in Backend:", formattedDOB.toISOString().split("T")[0]);
+      formattedDOB.setHours(
+        formattedDOB.getHours() + 5,
+        formattedDOB.getMinutes() + 30
+      ); // Convert UTC to IST
+      console.log(
+        "📌 Fixed Date in Backend:",
+        formattedDOB.toISOString().split("T")[0]
+      );
 
       doctor.date_of_birth = formattedDOB.toISOString().split("T")[0]; // Send Correct Date
 
@@ -265,86 +278,89 @@ exports.getDoctorById = (req, res) => {
   });
 };
 
-
 // ✅ Update Doctor Details
 exports.updateDoctor = async (req, res) => {
   const doctor_id = req.params.id;
   const {
-      doctor_password,
-      first_name,
-      last_name,
-      date_of_birth,
-      age,
-      gender,
-      email,
-      phone_number,
-      permanent_address,
-      current_address,
-      doctor_specialty
+    doctor_password,
+    first_name,
+    last_name,
+    date_of_birth,
+    age,
+    gender,
+    email,
+    phone_number,
+    permanent_address,
+    current_address,
+    doctor_specialty,
   } = req.body;
 
   try {
-      let hashedPassword;
+    let hashedPassword;
 
-      if (doctor_password) {
-          hashedPassword = await bcrypt.hash(doctor_password, 8);
-      } else {
-          // Fetch the existing password if not updated
-          const getPasswordSQL = "SELECT doctor_password FROM DoctorsDetails WHERE doctor_id = ?";
-          db.query(getPasswordSQL, [doctor_id], (err, results) => {
-              if (err) {
-                  console.error("❌ Error fetching old password:", err);
-                  return res.status(500).json({ message: "Error updating doctor password" });
-              }
-              if (results.length > 0) {
-                  hashedPassword = results[0].doctor_password;
-              } else {
-                  return res.status(404).json({ message: "Doctor not found" });
-              }
+    if (doctor_password) {
+      hashedPassword = await bcrypt.hash(doctor_password, 8);
+    } else {
+      // Fetch the existing password if not updated
+      const getPasswordSQL =
+        "SELECT doctor_password FROM DoctorsDetails WHERE doctor_id = ?";
+      db.query(getPasswordSQL, [doctor_id], (err, results) => {
+        if (err) {
+          console.error("❌ Error fetching old password:", err);
+          return res
+            .status(500)
+            .json({ message: "Error updating doctor password" });
+        }
+        if (results.length > 0) {
+          hashedPassword = results[0].doctor_password;
+        } else {
+          return res.status(404).json({ message: "Doctor not found" });
+        }
 
-              // Call update function after fetching the password
-              updateDoctorInDB();
-          });
-          return;
-      }
+        // Call update function after fetching the password
+        updateDoctorInDB();
+      });
+      return;
+    }
 
-      updateDoctorInDB();
+    updateDoctorInDB();
 
-      function updateDoctorInDB() {
-          const formattedDOB = new Date(date_of_birth).toISOString().split("T")[0];
+    function updateDoctorInDB() {
+      const formattedDOB = new Date(date_of_birth).toISOString().split("T")[0];
 
-          const sql = `UPDATE DoctorsDetails 
+      const sql = `UPDATE DoctorsDetails 
                       SET doctor_password=?, first_name=?, last_name=?, date_of_birth=?, age=?, gender=?, email=?, phone_number=?, permanent_address=?, current_address=?, doctor_specialty=? 
                       WHERE doctor_id=?`;
 
-          const values = [
-              hashedPassword,
-              first_name,
-              last_name,
-              formattedDOB,
-              age,
-              gender,
-              email,
-              phone_number,
-              permanent_address,
-              current_address,
-              doctor_specialty,
-              doctor_id
-          ];
+      const values = [
+        hashedPassword,
+        first_name,
+        last_name,
+        formattedDOB,
+        age,
+        gender,
+        email,
+        phone_number,
+        permanent_address,
+        current_address,
+        doctor_specialty,
+        doctor_id,
+      ];
 
-          db.query(sql, values, (err, result) => {
-              if (err) {
-                  console.error("❌ Error updating doctor:", err);
-                  return res.status(500).json({ message: "Error updating doctor", error: err });
-              }
-              console.log("✅ Doctor updated successfully!");
-              res.status(200).json({ message: "Doctor updated successfully!" });
-          });
-      }
-
+      db.query(sql, values, (err, result) => {
+        if (err) {
+          console.error("❌ Error updating doctor:", err);
+          return res
+            .status(500)
+            .json({ message: "Error updating doctor", error: err });
+        }
+        console.log("✅ Doctor updated successfully!");
+        res.status(200).json({ message: "Doctor updated successfully!" });
+      });
+    }
   } catch (err) {
-      console.error("❌ Error updating doctor:", err);
-      res.status(500).json({ message: "Internal server error" });
+    console.error("❌ Error updating doctor:", err);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -361,13 +377,13 @@ exports.submitAttendance = (req, res) => {
   const values = [doctor_id, doctor_name, doctor_specialty, leave_date];
 
   db.query(sql, values, (err, result) => {
-      if (err) {
-          console.error("❌ Error inserting attendance record:", err);
-          return res.status(500).json({ message: "Error submitting attendance", error: err });
-      }
-      console.log("✅ Attendance stored successfully!");
-      res.status(200).json({ message: "Attendance submitted successfully!" });
+    if (err) {
+      console.error("❌ Error inserting attendance record:", err);
+      return res
+        .status(500)
+        .json({ message: "Error submitting attendance", error: err });
+    }
+    console.log("✅ Attendance stored successfully!");
+    res.status(200).json({ message: "Attendance submitted successfully!" });
   });
 };
-
-

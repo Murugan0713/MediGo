@@ -318,6 +318,28 @@
       
       form.submit(); // Submit form if everything is valid
     }
+  //new code
+  if (pass1 !== pass2) {
+            alert("Passwords do not match!");
+            return;
+        }
+
+        // Send data to the backend
+        fetch("/auth/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ uname, email, pass1 })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === "error") {
+                alert(data.message); // Show alert if email already exists
+            } else {
+                alert("Registration successful!");
+                window.location.href = "/login.html"; // Redirect to login page
+            }
+        })
+        .catch(error => console.error("Error:", error));
   });
 
   // Real-time validation

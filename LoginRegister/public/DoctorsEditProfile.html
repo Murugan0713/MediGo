@@ -48,13 +48,10 @@
         margin-left:20px;
       }
 
-
       /*footer css*/
       .footer-container,.py-3{
         background-color: #4caf50;
       }
-
-
     </style>
 </head>
 <body>
@@ -143,88 +140,124 @@
         </footer>
       </div>
       <script>
-       document.addEventListener("DOMContentLoaded", function () {
-    // ✅ Check if doctor_id exists in local storage
-    const doctorId = localStorage.getItem("doctor_id");
-    
-    if (!doctorId) {
-        alert("You are not logged in. Redirecting to the Doctor Login page.");
-        window.location.href = "DoctorLogin.html"; // Redirect immediately
-        return; // Stop further execution
-    }
+        document.addEventListener("DOMContentLoaded", function () {
+            // First verify session with backend
+            fetch('/auth/getCurrentDoctor', {
+                credentials: 'include' // Important for sending cookies
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.message === "Doctor not logged in") {
+                    // If backend says not logged in, check localStorage as fallback
+                    const doctorId = localStorage.getItem("doctor_id");
+                    if (!doctorId) {
+                        throw new Error("No active session found");
+                    }
+                    return { doctor_id: doctorId };
+                }
+                return data;
+            })
+            .then(data => {
+                const doctorId = data.doctor_id;
+                if (!doctorId) {
+                    throw new Error("No doctor ID found");
+                }
 
-    // ✅ Fetch doctor details if doctor_id is present
-    fetch(`/auth/getDoctorById/${doctorId}`)
-        .then(response => response.json())
-        .then(doctor => {
-            console.log("📌 Date received from Backend:", doctor.date_of_birth); // ✅ Debug received date
+                // Store in localStorage as fallback
+                localStorage.setItem("doctor_id", doctorId);
+                
+                // Fetch doctor details
+                return fetch(`http://localhost:3005/auth/getDoctorById/${doctorId}`, {
+                    credentials: 'include'
+                })
+                .then(response => response.json())
+                .then(doctor => {
+                    console.log("Doctor details received:", doctor);
 
-            // ✅ Directly assign the string without Date object conversion
-            document.getElementById("doctor_id").value = doctor.doctor_id;
-            document.getElementById("first_name").value = doctor.first_name;
-            document.getElementById("last_name").value = doctor.last_name;
-            document.getElementById("date_of_birth").value = doctor.date_of_birth;
-            document.getElementById("age").value = doctor.age;
-            document.getElementById("gender").value = doctor.gender;
-            document.getElementById("email").value = doctor.email;
-            document.getElementById("phone_number").value = doctor.phone_number;
-            document.getElementById("permanent_address").value = doctor.permanent_address;
-            document.getElementById("current_address").value = doctor.current_address;
-            document.getElementById("doctor_specialty").value = doctor.doctor_specialty;
-        })
-        .catch(error => console.error("❌ Error fetching doctor details:", error));
-});
+                    // Populate form fields
+                    document.getElementById("doctor_id").value = doctor.doctor_id;
+                    document.getElementById("first_name").value = doctor.first_name;
+                    document.getElementById("last_name").value = doctor.last_name;
+                    document.getElementById("date_of_birth").value = doctor.date_of_birth;
+                    document.getElementById("age").value = doctor.age;
+                    document.getElementById("gender").value = doctor.gender;
+                    document.getElementById("email").value = doctor.email;
+                    document.getElementById("phone_number").value = doctor.phone_number;
+                    document.getElementById("permanent_address").value = doctor.permanent_address;
+                    document.getElementById("current_address").value = doctor.current_address;
+                    document.getElementById("doctor_specialty").value = doctor.doctor_specialty;
+                });
+            })
+            .catch(error => {
+                console.error("Error verifying session:", error);
+                alert("You need to login first");
+                window.location.href = "DoctorsLogin.html";
+            });
+        });
 
-// ✅ Update Profile Function
-function updateProfile() {
-    const doctorId = document.getElementById("doctor_id").value;
-    const updatedData = {
-        first_name: document.getElementById("first_name").value,
-        last_name: document.getElementById("last_name").value,
-        date_of_birth: document.getElementById("date_of_birth").value,
-        age: document.getElementById("age").value,
-        gender: document.getElementById("gender").value,
-        email: document.getElementById("email").value,
-        phone_number: document.getElementById("phone_number").value,
-        permanent_address: document.getElementById("permanent_address").value,
-        current_address: document.getElementById("current_address").value,
-        doctor_specialty: document.getElementById("doctor_specialty").value
-    };
+        // Update Profile Function
+        function updateProfile() {
+            const doctorId = document.getElementById("doctor_id").value;
+            const updatedData = {
+                first_name: document.getElementById("first_name").value,
+                last_name: document.getElementById("last_name").value,
+                date_of_birth: document.getElementById("date_of_birth").value,
+                age: document.getElementById("age").value,
+                gender: document.getElementById("gender").value,
+                email: document.getElementById("email").value,
+                phone_number: document.getElementById("phone_number").value,
+                permanent_address: document.getElementById("permanent_address").value,
+                current_address: document.getElementById("current_address").value,
+                doctor_specialty: document.getElementById("doctor_specialty").value
+            };
 
-    fetch(`/auth/updateDoctor/${doctorId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updatedData)
-    })
-    .then(response => response.json())
-    .then(data => {
-        alert(data.message);
-        if (data.message.includes("success")) {
-            window.location.href = "DoctorsdashBoard.html"; // Redirect on success
+            fetch(`/auth/updateDoctor/${doctorId}`, {
+                method: "PUT",
+                headers: { 
+                    "Content-Type": "application/json"
+                },
+                credentials: 'include', // Important for session cookies
+                body: JSON.stringify(updatedData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert(data.message);
+                if (data.message.toLowerCase().includes("success")) {
+                    window.location.href = "DoctorsdashBoard.html";
+                }
+            })
+            .catch(error => {
+                console.error("Error updating profile:", error);
+                alert("Failed to update profile. Please try again.");
+            });
         }
-    })
-    .catch(error => console.error("❌ Error updating profile:", error));
-}
-//Automatic Age calculation
-document.getElementById("date_of_birth").addEventListener("change", function () {
-    const dob = new Date(this.value);
-    const today = new Date();
-    
-    let age = today.getFullYear() - dob.getFullYear();
-    const monthDiff = today.getMonth() - dob.getMonth();
-    const dayDiff = today.getDate() - dob.getDate();
-    
-    // Adjust age if birthday hasn't occurred yet this year
-    if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
-        age--;
-    }
-    
-    document.getElementById("age").value = age;
-});
 
-    </script>
-    
-          
-      
+        // Automatic Age calculation
+        document.getElementById("date_of_birth").addEventListener("change", function () {
+            const dob = new Date(this.value);
+            const today = new Date();
+            
+            let age = today.getFullYear() - dob.getFullYear();
+            const monthDiff = today.getMonth() - dob.getMonth();
+            const dayDiff = today.getDate() - dob.getDate();
+            
+            // Adjust age if birthday hasn't occurred yet this year
+            if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+                age--;
+            }
+            
+            document.getElementById("age").value = age;
+        });
+      </script>
 </body>
 </html>
